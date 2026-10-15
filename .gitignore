@@ -1,0 +1,8 @@
+# System & temporary runner files
+powershell.bat
+*/powershell.bat
+.DS_Store
+Thumbs.db
+*.log
+my_app/
+

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dream Moon Staff Portal | Catalog & Store Manager</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- ==========================================
+       1. STAFF LOGIN OVERLAY
+       ========================================== -->
+  <div class="admin-login-wrapper" id="adminLoginWrapper">
+    <div class="login-card">
+      <div class="login-icon">🔒</div>
+      <h2>Dream Moon Staff Access</h2>
+      <p>Log in with your staff passcode to manage products, update prices, and publish live changes.</p>
+
+      <form id="staffLoginForm">
+        <div class="login-field">
+          <label for="staffPinInput">Staff Passcode</label>
+          <input type="password" id="staffPinInput" placeholder="Enter staff passcode..." required autocomplete="current-password" autofocus />
+        </div>
+        <div id="loginError" style="color: #C62828; font-size: 0.85rem; margin-bottom: 14px; display: none;"></div>
+
+        <button type="submit" class="btn-add-product" style="width: 100%; justify-content: center; padding: 13px;">
+          <span>Enter Staff Portal</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+
+        <p class="login-hint">
+          Default Passcode: <code>dreammoon2026</code>
+        </p>
+        <p style="margin-top: 18px;">
+          <a href="index.html" style="color: var(--primary); text-decoration: none; font-size: 0.86rem; font-weight: 600;">← Back to Storefront</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2. ADMIN MAIN APPLICATION
+       ========================================== -->
+  <div id="adminApp" style="display: none; width: 100%; min-height: 100vh;">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <div class="admin-brand-icon">🌙</div>
+        <div>
+          <h3>Dream Moon</h3>
+          <span>Staff Management</span>
+        </div>
+      </div>
+
+      <nav class="admin-nav">
+        <div class="admin-nav-item active" data-tab="catalog">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Product Catalog</span>
+        </div>
+
+        <div class="admin-nav-item" data-tab="inquiries">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <span>Customer Inquiries</span>
+        </div>
+
+        <div class="admin-nav-item" data-tab="github">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          <span>GitHub Pages Sync</span>
+        </div>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <a href="index.html" target="_blank" class="btn-sidebar-view">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>View Live Storefront</span>
+        </a>
+        <button class="btn-sidebar-logout" onclick="logoutStaff()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Staff Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="admin-main">
+      
+      <!-- TAB 1: PRODUCT CATALOG -->
+      <section class="admin-tab-content" id="tab-catalog">
+        
+        <div class="admin-topbar">
+          <div>
+            <h1>Product Management</h1>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Add, edit, change pricing, and toggle stock for your yarn jewellery.</p>
+          </div>
+          <div class="admin-topbar-actions">
+            <button class="btn-github-sync" id="openGithubSyncBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              <span>Publish to Live Site</span>
+            </button>
+            <button class="btn-add-product" onclick="openAddProductModal()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Add Yarn Creation</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="admin-stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon terracotta">🧵</div>
+            <div>
+              <div class="stat-value" id="statTotalProducts">0</div>
+              <div class="stat-title">Total Products</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon sage">✓</div>
+            <div>
+              <div class="stat-value" id="statInStockCount">0</div>
+              <div class="stat-title">In Stock Items</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon gold">💌</div>
+            <div>
+              <div class="stat-value" id="statInquiriesCount">0</div>
+              <div class="stat-title">Orders / Inquiries</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon dark">⚡</div>
+            <div>
+              <div class="stat-value" style="font-size:1.1rem; color:var(--success);">GitHub Active</div>
+              <div class="stat-title">Pages Sync Ready</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="admin-card-container">
+          <div class="card-container-header">
+            <h3>All Products in Store</h3>
+            <div class="admin-search-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <input type="text" placeholder="Search creations..." oninput="handleAdminSearch(this.value)">
+            </div>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Item & Code</th>
+                <th>Category</th>
+                <th>Price (₹)</th>
+                <th>Status</th>
+                <th>Badge</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductsTbody">
+              <!-- Rendered via js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: INQUIRIES -->
+      <section class="admin-tab-content" id="tab-inquiries" style="display: none;">
+        <div class="admin-topbar">
+          <div>
+            <h1>Customer Inquiries & Orders</h1>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Customer order inquiries submitted via the website form.</p>
+          </div>
+        </div>
+
+        <div class="admin-card-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Inquiry ID & Date</th>
+                <th>Customer & Contact</th>
+                <th>Product & Colorway</th>
+                <th>City & Notes</th>
+                <th>Channel</th>
+              </tr>
+            </thead>
+            <tbody id="inquiriesListTable">
+              <!-- Rendered via js/admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: GITHUB PAGES SYNC -->
+      <section class="admin-tab-content" id="tab-github" style="display: none;">
+        <div class="admin-topbar">
+          <div>
+            <h1>GitHub Pages Deployment Settings</h1>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Configure one-click publishing to your GitHub repository.</p>
+          </div>
+        </div>
+
+        <div class="admin-card-container" style="padding: 30px; max-width: 750px;">
+          <div class="github-banner">
+            <strong>💡 How this works:</strong> Whenever you add or edit products in this Staff Portal, clicking "Publish to Live Site" will automatically commit your updated <code>data/products.json</code> directly to your GitHub repository. GitHub Pages will build and update your website in 1–2 minutes!
+          </div>
+
+          <div class="login-field">
+            <label>GitHub Account Username</label>
+            <input type="text" id="tabGhUsername" value="saboorhussain128-rgb" readonly style="background:#F2EDE6;" />
+          </div>
+
+          <div class="login-field">
+            <label>Repository Name</label>
+            <input type="text" id="tabGhRepo" value="dreammoon-store" />
+          </div>
+
+          <div class="login-field">
+            <label>Branch</label>
+            <input type="text" id="tabGhBranch" value="main" />
+          </div>
+
+          <div class="login-field">
+            <label>GitHub Personal Access Token (PAT)</label>
+            <input type="password" id="tabGhToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+            <small style="color:var(--text-muted); display:block; margin-top:6px;">
+              Generate on GitHub: Settings &rarr; Developer Settings &rarr; Personal Access Tokens (Classic) &rarr; Check `repo` scope.
+            </small>
+          </div>
+
+          <div style="display:flex; gap:14px; margin-top:24px;">
+            <button class="btn-github-sync" onclick="document.getElementById('openGithubSyncBtn').click()">
+              <span>Open Publish Modal</span>
+            </button>
+            <button class="action-icon-btn" style="width:auto; padding:0 18px; border-radius:30px;" onclick="downloadCatalogJson()">
+              <span>Download products.json Backup</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==========================================
+       3. ADD / EDIT PRODUCT MODAL
+       ========================================== -->
+  <div class="admin-modal-overlay" id="productModalOverlay">
+    <div class="admin-modal-card">
+      <div class="admin-modal-title" id="productModalTitle">Add New Yarn Creation</div>
+
+      <form id="productForm">
+        <input type="hidden" id="editProductId" />
+
+        <div class="login-field">
+          <label>Product Title *</label>
+          <input type="text" id="editTitle" placeholder="e.g. Boho Daisy Yarn Choker" required />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="login-field">
+            <label>Category *</label>
+            <select id="editCategory" class="login-field input" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border);" required>
+              <option value="earrings">Yarn & Crochet Earrings</option>
+              <option value="necklaces">Chokers & Necklaces</option>
+              <option value="hair">Hair Bows & Scrunchies</option>
+              <option value="bracelets">Bracelets & Charms</option>
+              <option value="charms">Car & Bag Accents</option>
+              <option value="gifts">Gift Bundles & Hampers</option>
+            </select>
+          </div>
+
+          <div class="login-field">
+            <label>Badge / Tag</label>
+            <input type="text" id="editBadge" placeholder="e.g. Best Seller, Exhibition Pick" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="login-field">
+            <label>Price (₹) *</label>
+            <input type="number" id="editPrice" placeholder="349" required />
+          </div>
+
+          <div class="login-field">
+            <label>Original / Strikethrough Price (₹)</label>
+            <input type="number" id="editOriginalPrice" placeholder="499" />
+          </div>
+        </div>
+
+        <div class="login-field">
+          <label>Product Image URL *</label>
+          <input type="url" id="editImageUrl" placeholder="https://... (Instagram photo URL or Unsplash)" required />
+          <small style="color:var(--text-muted); display:block; margin-top:4px;">Or choose a local photo from your device:</small>
+          <input type="file" id="editImageFile" accept="image/*" style="margin-top:6px; font-size:0.85rem;" />
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <img id="imgPreview" src="" alt="Preview" style="max-height: 140px; border-radius: 10px; display: none; border: 1px solid var(--border);" />
+        </div>
+
+        <div class="login-field">
+          <label>Yarn Colorways (comma-separated)</label>
+          <input type="text" id="editColors" placeholder="e.g. Mustard Yellow, Warm Terracotta, Sage Green" />
+        </div>
+
+        <div class="login-field">
+          <label>Description</label>
+          <textarea id="editDescription" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); min-height:70px; font-family:inherit;"></textarea>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px;">
+          <input type="checkbox" id="editInStock" checked style="width:18px; height:18px;" />
+          <label for="editInStock" style="font-weight:600; cursor:pointer;">Mark as In Stock (uncheck for Made to Order)</label>
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" class="btn-sidebar-view" style="color:var(--text-dark); background:#EEE;" onclick="closeProductModal()">Cancel</button>
+          <button type="submit" class="btn-add-product">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       4. GITHUB COMMIT & PUBLISH MODAL
+       ========================================== -->
+  <div class="admin-modal-overlay" id="githubSyncModal">
+    <div class="admin-modal-card">
+      <div class="admin-modal-title">Publish Changes to GitHub Pages</div>
+      
+      <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:18px;">
+        This will commit the current product catalog directly to your GitHub repository and automatically trigger GitHub Pages.
+      </p>
+
+      <div class="login-field">
+        <label>GitHub Username</label>
+        <input type="text" id="ghUsername" value="saboorhussain128-rgb" />
+      </div>
+
+      <div class="login-field">
+        <label>Repository Name</label>
+        <input type="text" id="ghRepo" value="dreammoon-store" />
+      </div>
+
+      <div class="login-field">
+        <label>Target Branch</label>
+        <input type="text" id="ghBranch" value="main" />
+      </div>
+
+      <div class="login-field">
+        <label>GitHub Personal Access Token (PAT) *</label>
+        <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+        <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:4px;">
+          Token is stored safely in your browser localStorage only.
+        </small>
+      </div>
+
+      <div id="ghSyncStatus" style="margin: 16px 0;"></div>
+
+      <div class="admin-modal-actions">
+        <button type="button" class="btn-sidebar-view" style="color:var(--text-dark); background:#EEE;" id="closeGithubModalBtn">Cancel</button>
+        <button type="button" class="btn-github-sync" id="commitToGithubBtn">
+          <span>Commit & Publish Live</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

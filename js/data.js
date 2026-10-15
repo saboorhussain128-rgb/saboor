@@ -1,0 +1,137 @@
+// Default initial catalog for Dream Moon by Heena
+const DEFAULT_PRODUCTS = [
+  {
+    "id": "dm-001",
+    "title": "Boho Sunflower Yarn Drop Earrings",
+    "category": "earrings",
+    "categoryName": "Yarn & Crochet Earrings",
+    "price": 349,
+    "originalPrice": 499,
+    "badge": "Best Seller",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Mustard Yellow", "Warm Terracotta", "Cream White", "Olive Sage"],
+    "image": "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80",
+    "description": "Hand-crocheted sunflower motif earrings made from soft combed cotton yarn with hypoallergenic gold-plated hooks. Lightweight and vibrant for daily wear or festive occasions.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-002",
+    "title": "Terracotta Daisy Crochet Choker",
+    "category": "necklaces",
+    "categoryName": "Chokers & Necklaces",
+    "price": 499,
+    "originalPrice": 650,
+    "badge": "Exhibition Favorite",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Terracotta & Beige", "Pastel Lilac & Sage", "Dusty Pink & Ivory"],
+    "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80",
+    "description": "Intricately woven floral choker necklace with adjustable silk-blend thread ties. Created using premium cotton embroidery yarn with tiny faux pearl centerpieces.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-003",
+    "title": "Aesthetic Pastel Satin & Yarn Scrunchie Duo",
+    "category": "hair",
+    "categoryName": "Hair Accessories & Bows",
+    "price": 229,
+    "originalPrice": 299,
+    "badge": "Trending",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Blush Pink & Oat", "Sage Green & Cream", "Lilac Cloud"],
+    "image": "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=800&q=80",
+    "description": "Cloud-soft textured scrunchies with fine hand-knit scalloped edges. Gentle on delicate hair, prevents frizz and breakage with durable high-stretch core.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-004",
+    "title": "Handcrafted Floral Yarn Claw Clip",
+    "category": "hair",
+    "categoryName": "Hair Accessories & Bows",
+    "price": 279,
+    "originalPrice": 399,
+    "badge": "New Drop",
+    "inStock": true,
+    "featured": false,
+    "yarnColors": ["Petal Peach", "Buttercream", "Forest Sage"],
+    "image": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=800&q=80",
+    "description": "Aesthetic French matte claw clip adorned with 3D crocheted cherry blossoms and micro leaves. Strong interlocking teeth that hold thick or fine hair effortlessly.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-005",
+    "title": "Bohemian Thread Tassel & Hoops",
+    "category": "earrings",
+    "categoryName": "Yarn & Crochet Earrings",
+    "price": 389,
+    "originalPrice": 520,
+    "badge": "Handmade Pick",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Rust Orange", "Earthy Sand", "Forest Pine", "Midnight Navy"],
+    "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80",
+    "description": "Brass-toned circular hoops woven with fine organic yarn gradients and cascading silky mini tassels. Extremely lightweight and statement-making.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-006",
+    "title": "Custom Initial Charm & Beaded Bracelet",
+    "category": "bracelets",
+    "categoryName": "Bracelets & Charms",
+    "price": 299,
+    "originalPrice": 399,
+    "badge": "Customizable",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Rose Gold Beads", "Silver & Cream Yarn Wrap", "Multicolor Pastel"],
+    "image": "https://images.unsplash.com/photo-1611591475155-42ac62973e0c?auto=format&fit=crop&w=800&q=80",
+    "description": "Delicate adjustable beaded bracelet with hand-wrapped thread initial pendant and gold alloy spacer beads. Waterproof cord with sliding closure.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-007",
+    "title": "Crochet Cherry Blossom Car / Bag Charm",
+    "category": "charms",
+    "categoryName": "Car & Bag Accents",
+    "price": 249,
+    "originalPrice": 349,
+    "badge": "Viral Item",
+    "inStock": true,
+    "featured": false,
+    "yarnColors": ["Sakura Pink", "Crimson Red", "Sunny Daffodil"],
+    "image": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+    "description": "Miniature hand-knitted flower charm with brass swivel hook and hanging bells. Ideal for car rearview mirrors, tote bags, backpacks, or keyrings.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  },
+  {
+    "id": "dm-008",
+    "title": "Bespoke Pop-Up Gift Box Set (4 Pieces)",
+    "category": "gifts",
+    "categoryName": "Gift Bundles & Hampers",
+    "price": 999,
+    "originalPrice": 1499,
+    "badge": "Value Hamper",
+    "inStock": true,
+    "featured": true,
+    "yarnColors": ["Boho Warm Palette", "Pastel Dream Box", "Custom Choice"],
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+    "description": "Signature curated gift box featuring: 1 Pair of Crochet Earrings, 1 Floral Claw Clip, 1 Satin-Yarn Scrunchie, and 1 Custom Initial Charm Bracelet packed in an aesthetic keepsake box with a personalized handwritten card.",
+    "instagramPost": "https://www.instagram.com/dreammoonbyheena"
+  }
+];
+
+// Configuration for Store
+const STORE_CONFIG = {
+  brandName: "Dream Moon",
+  founder: "Heena",
+  tagline: "Handcrafted Yarn Jewellery & Aesthetic Accessories",
+  location: "Hyderabad, India",
+  instagramHandle: "dreammoonbyheena",
+  instagramUrl: "https://www.instagram.com/dreammoonbyheena",
+  whatsappNumber: "+919876543210", // Default placeholder, editable in Admin
+  currencySymbol: "₹",
+  githubRepo: "dreammoon-store",
+  githubUser: "saboorhussain128-rgb"
+};

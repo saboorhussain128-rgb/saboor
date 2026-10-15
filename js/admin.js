@@ -13,7 +13,7 @@ const DEFAULT_STAFF_PIN = "dreammoon2026";
 // GitHub Config Defaults
 const DEFAULT_GH_CONFIG = {
   username: "saboorhussain128-rgb",
-  repo: "dreammoon-store",
+  repo: "saboor",
   branch: "main",
   path: "data/products.json",
   token: ""

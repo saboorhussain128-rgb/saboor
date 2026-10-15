@@ -132,6 +132,6 @@ const STORE_CONFIG = {
   instagramUrl: "https://www.instagram.com/dreammoonbyheena",
   whatsappNumber: "+919876543210", // Default placeholder, editable in Admin
   currencySymbol: "₹",
-  githubRepo: "dreammoon-store",
+  githubRepo: "saboor",
   githubUser: "saboorhussain128-rgb"
 };

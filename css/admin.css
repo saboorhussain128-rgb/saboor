@@ -19,6 +19,19 @@
   --danger: #C62828;
 }
 
+[data-theme="dark"] {
+  --admin-bg: #12100E;
+  --admin-sidebar: #0D0B0A;
+  --admin-card: #1C1815;
+  --primary: #D97E62;
+  --primary-hover: #C36B4E;
+  --accent-sage: #8CA389;
+  --accent-gold: #E5AC4E;
+  --border: #332B25;
+  --text-dark: #F8F4EE;
+  --text-muted: #9E9189;
+}
+
 body.admin-body {
   background: var(--admin-bg);
   font-family: 'Plus Jakarta Sans', sans-serif;

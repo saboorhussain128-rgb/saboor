@@ -1,5 +1,6 @@
 /**
  * Dream Moon by Heena - Client Storefront Application
+ * Features: Dark/Light Theme, Animated Hero, Category Filters, Mobile Drawer & WhatsApp Orders
  */
 
 // Application State
@@ -9,39 +10,172 @@ let inquiryBag = [];
 let selectedProductForInquiry = null;
 let selectedColorway = '';
 
+// Hero Preview Data
+const HERO_PREVIEWS = [
+  {
+    title: "Sunflower Yarn Dangles",
+    sub: "Exhibition Bestseller • ₹349",
+    img: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=85",
+    colorName: "Mustard Yellow"
+  },
+  {
+    title: "Terracotta Daisy Choker",
+    sub: "Woven Cotton Collar • ₹499",
+    img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=85",
+    colorName: "Warm Terracotta"
+  },
+  {
+    title: "Floral Sage Claw Clip",
+    sub: "3D Crochet Blossom • ₹279",
+    img: "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=900&q=85",
+    colorName: "Olive Sage"
+  },
+  {
+    title: "Pastel Satin-Yarn Scrunchie",
+    sub: "Scalloped Hand-Knit • ₹229",
+    img: "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=900&q=85",
+    colorName: "Blush Rose"
+  },
+  {
+    title: "Custom Charm Bracelet",
+    sub: "Beaded Thread Wrap • ₹299",
+    img: "https://images.unsplash.com/photo-1611591475155-42ac62973e0c?auto=format&fit=crop&w=900&q=85",
+    colorName: "Ivory Cream"
+  }
+];
+
 // DOM Elements
 const productsGrid = document.getElementById('productsGrid');
 const categoryFilters = document.getElementById('categoryFilters');
-const bagCountBadge = document.getElementById('bagCount');
 const inquiryModal = document.getElementById('inquiryModal');
 const toastNotice = document.getElementById('toastNotice');
+const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeToggleIcon = document.getElementById('themeToggleIcon');
 
 // Initialize Store
 document.addEventListener('DOMContentLoaded', async () => {
+  initTheme();
   await loadProducts();
   setupCategoryFilters();
   renderProducts();
   setupInquiryModal();
-  updateBagCount();
+  setupMobileDrawer();
   setupSmoothScrolling();
 });
 
-/**
- * Load products with prioritized fallbacks
- */
+/* ==========================================================================
+   1. Theme Management (Dark & Light)
+   ========================================================================== */
+function initTheme() {
+  const savedTheme = localStorage.getItem('dreammoon_theme');
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+
+  applyTheme(initialTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', toggleTheme);
+  }
+}
+
+window.toggleTheme = function() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const nextTheme = current === 'dark' ? 'light' : 'dark';
+  applyTheme(nextTheme);
+  showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme`);
+};
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('dreammoon_theme', theme);
+
+  if (themeToggleIcon) {
+    themeToggleIcon.innerText = theme === 'dark' ? '☀️' : '🌙';
+  }
+
+  const drawerThemeLabel = document.getElementById('drawerThemeLabel');
+  if (drawerThemeLabel) {
+    drawerThemeLabel.innerText = theme === 'dark' ? '☀️ Switch to Light Mode' : '🌙 Switch to Dark Mode';
+  }
+}
+
+/* ==========================================================================
+   2. Mobile Drawer Navigation
+   ========================================================================== */
+function setupMobileDrawer() {
+  if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', () => {
+      mobileNavDrawer.classList.toggle('active');
+      mobileMenuToggle.classList.toggle('active');
+    });
+  }
+
+  const closeBtn = document.getElementById('closeMobileDrawerBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMobileDrawer);
+  }
+
+  if (mobileNavDrawer) {
+    mobileNavDrawer.addEventListener('click', (e) => {
+      if (e.target === mobileNavDrawer) closeMobileDrawer();
+    });
+  }
+}
+
+window.closeMobileDrawer = function() {
+  if (mobileNavDrawer) mobileNavDrawer.classList.remove('active');
+  if (mobileMenuToggle) mobileMenuToggle.classList.remove('active');
+};
+
+/* ==========================================================================
+   3. Hero Interactive Yarn Colorway Switcher
+   ========================================================================== */
+window.changeHeroPreview = function(index, el) {
+  const preview = HERO_PREVIEWS[index];
+  if (!preview) return;
+
+  // Active state for dots
+  document.querySelectorAll('.hero-palette-dot').forEach(dot => dot.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  const mainCard = document.getElementById('heroMainCard');
+  const img = document.getElementById('heroShowcaseImg');
+  const satTitle = document.getElementById('heroSatTitle');
+  const satSub = document.getElementById('heroSatSub');
+
+  if (mainCard) {
+    mainCard.style.opacity = '0.4';
+    mainCard.style.transform = 'scale(0.97)';
+  }
+
+  setTimeout(() => {
+    if (img) img.src = preview.img;
+    if (satTitle) satTitle.innerText = preview.title;
+    if (satSub) satSub.innerText = preview.sub;
+
+    if (mainCard) {
+      mainCard.style.opacity = '1';
+      mainCard.style.transform = '';
+    }
+  }, 180);
+};
+
+/* ==========================================================================
+   4. Products & Catalog Logic
+   ========================================================================== */
 async function loadProducts() {
-  // 1. Check local storage for any live admin edits
   const localData = localStorage.getItem('dreammoon_products');
   if (localData) {
     try {
       products = JSON.parse(localData);
       return;
     } catch (e) {
-      console.warn("Couldn't parse local product cache:", e);
+      console.warn("Couldn't parse local products cache:", e);
     }
   }
 
-  // 2. Attempt fetching data/products.json
   try {
     const res = await fetch('data/products.json');
     if (res.ok) {
@@ -49,18 +183,14 @@ async function loadProducts() {
       return;
     }
   } catch (err) {
-    console.log("Local fetch unavailable, falling back to embedded catalog data");
+    console.log("Local fetch unavailable, falling back to embedded data");
   }
 
-  // 3. Fallback to DEFAULT_PRODUCTS from data.js
   if (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)) {
     products = DEFAULT_PRODUCTS;
   }
 }
 
-/**
- * Setup category filter tabs
- */
 function setupCategoryFilters() {
   if (!categoryFilters) return;
 
@@ -75,9 +205,6 @@ function setupCategoryFilters() {
   });
 }
 
-/**
- * Render product cards based on active filter
- */
 function renderProducts() {
   if (!productsGrid) return;
 
@@ -98,9 +225,9 @@ function renderProducts() {
   productsGrid.innerHTML = filtered.map(item => {
     const swatchesHtml = item.yarnColors && item.yarnColors.length > 0
       ? `<div class="card-swatches">
-           <span>Colors:</span>
-           ${item.yarnColors.slice(0, 3).map(c => `<span class="swatch-text" style="background:#F2EBE3; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:600;">${c}</span>`).join('')}
-           ${item.yarnColors.length > 3 ? `<span style="font-size:0.7rem;">+${item.yarnColors.length - 3}</span>` : ''}
+           <span style="font-size:0.7rem; font-weight:600;">Colors:</span>
+           ${item.yarnColors.slice(0, 3).map(c => `<span style="background:var(--terracotta-light); color:var(--terracotta); padding:2px 7px; border-radius:12px; font-size:0.68rem; font-weight:600;">${c}</span>`).join('')}
+           ${item.yarnColors.length > 3 ? `<span style="font-size:0.68rem;">+${item.yarnColors.length - 3}</span>` : ''}
          </div>`
       : '';
 
@@ -111,7 +238,7 @@ function renderProducts() {
     return `
       <div class="product-card" data-id="${item.id}">
         <div class="card-media">
-          <img src="${item.image}" alt="${item.title}" loading="lazy" />
+          <img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1630019852942-f89202989a59?w=800'"/>
           ${badgeHtml}
           <a href="${item.instagramPost || 'https://www.instagram.com/dreammoonbyheena'}" target="_blank" rel="noopener" class="card-insta-link" title="View on Instagram">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -140,9 +267,9 @@ function renderProducts() {
   }).join('');
 }
 
-/**
- * Open Inquiry Modal with pre-selected item
- */
+/* ==========================================================================
+   5. Inquiry Modal & WhatsApp Link
+   ========================================================================== */
 window.openOrderModal = function(productId) {
   const item = products.find(p => p.id === productId);
   if (!item) return;
@@ -150,12 +277,10 @@ window.openOrderModal = function(productId) {
   selectedProductForInquiry = item;
   selectedColorway = (item.yarnColors && item.yarnColors.length > 0) ? item.yarnColors[0] : 'Standard Color';
 
-  // Populate preview
   document.getElementById('modalItemThumb').src = item.image;
   document.getElementById('modalItemTitle').innerText = item.title;
   document.getElementById('modalItemPrice').innerText = `₹${item.price}`;
 
-  // Populate color chips
   const colorContainer = document.getElementById('modalColorOptions');
   if (item.yarnColors && item.yarnColors.length > 0) {
     colorContainer.innerHTML = item.yarnColors.map((color, index) => `
@@ -167,7 +292,6 @@ window.openOrderModal = function(productId) {
     colorContainer.innerHTML = `<div class="color-chip selected">As Shown on Instagram</div>`;
   }
 
-  // Open modal
   inquiryModal.classList.add('active');
   document.body.style.overflow = 'hidden';
 };
@@ -178,18 +302,13 @@ window.selectColorChip = function(el, color) {
   selectedColorway = color;
 };
 
-/**
- * Setup Inquiry Modal event listeners
- */
 function setupInquiryModal() {
   const closeBtn = document.getElementById('closeModalBtn');
   const overlay = document.getElementById('inquiryModal');
   const whatsappBtn = document.getElementById('sendWhatsappBtn');
   const submitInquiryBtn = document.getElementById('submitInquiryBtn');
 
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeOrderModal);
-  }
+  if (closeBtn) closeBtn.addEventListener('click', closeOrderModal);
 
   if (overlay) {
     overlay.addEventListener('click', (e) => {
@@ -197,14 +316,12 @@ function setupInquiryModal() {
     });
   }
 
-  // Escape key to close
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && overlay.classList.contains('active')) {
       closeOrderModal();
     }
   });
 
-  // WhatsApp Order Submission
   if (whatsappBtn) {
     whatsappBtn.addEventListener('click', () => {
       const name = document.getElementById('customerName').value.trim();
@@ -224,19 +341,18 @@ function setupInquiryModal() {
 
       const message = `🌸 *New Order Inquiry - Dream Moon by Heena*\n\n` +
         `*Product:* ${selectedProductForInquiry ? selectedProductForInquiry.title : 'Custom Yarn Jewellery'}\n` +
-        `*Code:* ${selectedProductForInquiry ? selectedProductForInquiry.id : 'N/A'}\n` +
+        `*Code:* #${selectedProductForInquiry ? selectedProductForInquiry.id : 'N/A'}\n` +
         `*Price:* ₹${selectedProductForInquiry ? selectedProductForInquiry.price : ''}\n` +
-        `*Selected Color/Thread:* ${selectedColorway}\n\n` +
+        `*Selected Colorway:* ${selectedColorway}\n\n` +
         `*Customer Details:*\n` +
         `• Name: ${name}\n` +
-        `• Contact Phone: ${phone || 'Not provided'}\n` +
+        `• WhatsApp / Phone: ${phone || 'Not provided'}\n` +
         `• City / Location: ${city || 'Not provided'}\n` +
-        (note ? `• Custom Note: ${note}\n\n` : '\n') +
+        (note ? `• Custom Notes: ${note}\n\n` : '\n') +
         `_Sent via dreammoon web store inquiry_`;
 
       const encodedUrl = `https://api.whatsapp.com/send?phone=${storePhone}&text=${encodeURIComponent(message)}`;
       
-      // Also log inquiry locally
       saveInquiryLocally({
         product: selectedProductForInquiry ? selectedProductForInquiry.title : '',
         price: selectedProductForInquiry ? selectedProductForInquiry.price : 0,
@@ -255,7 +371,6 @@ function setupInquiryModal() {
     });
   }
 
-  // Direct Form Inquiry Submission
   if (submitInquiryBtn) {
     submitInquiryBtn.addEventListener('click', () => {
       const name = document.getElementById('customerName').value.trim();
@@ -294,9 +409,6 @@ function closeOrderModal() {
   document.body.style.overflow = '';
 }
 
-/**
- * Save inquiry to local storage for Admin to review
- */
 function saveInquiryLocally(inquiry) {
   try {
     const existing = JSON.parse(localStorage.getItem('dreammoon_inquiries') || '[]');
@@ -307,22 +419,13 @@ function saveInquiryLocally(inquiry) {
   }
 }
 
-/**
- * Toast notifications
- */
 function showToast(message) {
   if (!toastNotice) return;
   toastNotice.innerText = message;
   toastNotice.classList.add('show');
   setTimeout(() => {
     toastNotice.classList.remove('show');
-  }, 4000);
-}
-
-function updateBagCount() {
-  if (bagCountBadge) {
-    bagCountBadge.innerText = inquiryBag.length;
-  }
+  }, 3600);
 }
 
 function setupSmoothScrolling() {

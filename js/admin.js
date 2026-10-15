@@ -20,6 +20,8 @@ const DEFAULT_GH_CONFIG = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('dreammoon_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
   checkAuth();
   setupLoginForm();
   setupNavigation();

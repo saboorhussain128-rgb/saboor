@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,25 @@
     <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener">Follow @dreammoonbyheena ↗</a>
   </aside>
 
+  <!-- Marquee Ticker -->
+  <div class="marquee-bar" aria-hidden="true">
+    <div class="marquee-content">
+      <div class="marquee-item"><span class="marquee-dot"></span> 100% Handcrafted Fiber Art</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Custom Yarn Colorways</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Hypoallergenic & Featherlight</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Hyderabad Exhibition Stalls (Aangan & Noor-e-Umaish)</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Pure Combed Cotton Threads</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Pan-India Delivery</div>
+      <!-- duplicate for seamless loop -->
+      <div class="marquee-item"><span class="marquee-dot"></span> 100% Handcrafted Fiber Art</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Custom Yarn Colorways</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Hypoallergenic & Featherlight</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Hyderabad Exhibition Stalls (Aangan & Noor-e-Umaish)</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Pure Combed Cotton Threads</div>
+      <div class="marquee-item"><span class="marquee-dot"></span> Pan-India Delivery</div>
+    </div>
+  </div>
+
   <!-- Site Header -->
   <header class="site-header">
     <div class="container nav-wrapper">
@@ -31,7 +50,7 @@
         </div>
       </a>
 
-      <!-- Main Navigation -->
+      <!-- Desktop Navigation -->
       <nav class="main-nav" aria-label="Main Navigation">
         <a href="#collection" class="nav-link active">Collection</a>
         <a href="#categories" class="nav-link">Categories</a>
@@ -42,9 +61,15 @@
 
       <!-- Nav Actions -->
       <div class="nav-actions">
+        
+        <!-- Dark / Light Theme Toggle -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark and Light Mode" title="Toggle Theme">
+          <span id="themeToggleIcon">🌙</span>
+        </button>
+
         <!-- Staff Admin Portal Trigger -->
         <a href="admin.html" class="staff-badge-btn" title="Staff Portal: Manage products & features">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
@@ -60,25 +85,99 @@
           </svg>
           <span>Inquire</span>
         </button>
+
+        <!-- Hamburger Toggle for Mobile -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open Mobile Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
       </div>
 
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Mobile Slide-Out Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-drawer-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="brand-logo">
+          <div class="logo-symbol" style="width:34px; height:34px; font-size:1rem;">🌙</div>
+          <span class="logo-title" style="font-size:1.25rem;">Dream Moon</span>
+        </div>
+        <button class="modal-close-btn" id="closeMobileDrawerBtn" style="position:static;">&times;</button>
+      </div>
+
+      <div class="mobile-drawer-links">
+        <a href="#collection" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>Collection</span> <span>→</span>
+        </a>
+        <a href="#categories" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>Categories</span> <span>→</span>
+        </a>
+        <a href="#story" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>About Heena</span> <span>→</span>
+        </a>
+        <a href="#instagram" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>Instagram Feed</span> <span>↗</span>
+        </a>
+        <a href="#custom-order" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>Custom Orders</span> <span>→</span>
+        </a>
+      </div>
+
+      <div style="margin-top:auto; padding-top:24px; border-top:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:12px;">
+        <button class="btn-secondary" onclick="toggleTheme()" style="justify-content:center; width:100%;">
+          <span id="drawerThemeLabel">Toggle Dark Mode</span>
+        </button>
+        <a href="admin.html" class="btn-primary" style="justify-content:center; text-decoration:none;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Staff Login Portal</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animated & Revamped Hero Section -->
   <section class="hero-section" id="hero">
+    
+    <!-- Ambient Blur Glows -->
+    <div class="hero-ambient-blob top-right" aria-hidden="true"></div>
+    <div class="hero-ambient-blob bottom-left" aria-hidden="true"></div>
+
     <div class="container hero-grid">
       
+      <!-- Left Content Column -->
       <div class="hero-content">
+        
         <div class="hero-eyebrow">
-          <span>🧵 Hand-knitted & Crocheted Fiber Art</span>
+          <span class="pulse-dot"></span>
+          <span>Hand-knitted & Crocheted Fiber Art</span>
         </div>
+
         <h1 class="hero-title">
-          Where Soft Yarn Turns Into <span>Timeless Adornments</span>
+          Where Soft Yarn Turns Into <span class="italic-highlight">Timeless Adornments</span>
         </h1>
+
         <p class="hero-subtitle">
-          Handcrafted yarn earrings, crochet floral chokers, aesthetic scrunchies, and bespoke charm accessories created with artisanal care in Hyderabad. Lightweight, hypoallergenic, and crafted for your everyday style.
+          Handcrafted yarn earrings, crochet floral chokers, aesthetic scrunchies, and bespoke charm accessories created with artisanal care in Hyderabad. Featherlight, hypoallergenic, and personalized for your unique style.
         </p>
+
+        <!-- Interactive Yarn Colorway Previewer in Hero -->
+        <div class="hero-colorway-bar">
+          <span class="hero-colorway-label">Featured Yarn Palettes:</span>
+          <div class="hero-colorway-chips">
+            <button class="hero-palette-dot active" style="background:#D89838;" title="Mustard Yellow" onclick="changeHeroPreview(0, this)"></button>
+            <button class="hero-palette-dot" style="background:#C36B4E;" title="Warm Terracotta" onclick="changeHeroPreview(1, this)"></button>
+            <button class="hero-palette-dot" style="background:#6E846B;" title="Olive Sage" onclick="changeHeroPreview(2, this)"></button>
+            <button class="hero-palette-dot" style="background:#D98880;" title="Blush Rose" onclick="changeHeroPreview(3, this)"></button>
+            <button class="hero-palette-dot" style="background:#FAF0EE;" title="Ivory Cream" onclick="changeHeroPreview(4, this)"></button>
+          </div>
+        </div>
 
         <div class="hero-cta-group">
           <a href="#collection" class="btn-primary">
@@ -93,37 +192,55 @@
         <div class="hero-highlights">
           <div class="highlight-item">
             <span class="highlight-num">100%</span>
-            <span class="highlight-label">Handcrafted with Love</span>
+            <span class="highlight-label">Handcrafted</span>
           </div>
           <div class="highlight-item">
             <span class="highlight-num">170+</span>
-            <span class="highlight-label">Instagram Designs</span>
+            <span class="highlight-label">Instagram Drops</span>
           </div>
           <div class="highlight-item">
             <span class="highlight-num">Pure</span>
-            <span class="highlight-label">Combed Cotton Yarn</span>
+            <span class="highlight-label">Combed Cotton</span>
           </div>
         </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-image-card">
-          <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=85" alt="Dream Moon Handcrafted Yarn Jewellery" />
-          <div class="hero-floating-badge">
-            <div class="badge-icon">🌿</div>
-            <div>
-              <div class="badge-title">Exhibition Special</div>
-              <div class="badge-subtitle">Hyderabad Pop-up Stalls</div>
-            </div>
+      <!-- Right Visual Cluster (Animated Asymmetrical Cards) -->
+      <div class="hero-visual-cluster">
+        
+        <!-- Rotating thread orbit -->
+        <div class="hero-decorative-ring" aria-hidden="true"></div>
+
+        <!-- Floating Satellite Card 1: Top Right -->
+        <div class="floating-card-satellite">
+          <div class="satellite-icon">⭐</div>
+          <div>
+            <div class="satellite-title" id="heroSatTitle">Sunflower Yarn Dangles</div>
+            <div class="satellite-sub" id="heroSatSub">Exhibition Bestseller • ₹349</div>
           </div>
         </div>
+
+        <!-- Main Hero Card -->
+        <div class="hero-main-card" id="heroMainCard">
+          <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=85" id="heroShowcaseImg" alt="Dream Moon Handcrafted Yarn Jewellery" />
+        </div>
+
+        <!-- Floating Satellite Card 2: Bottom Left -->
+        <div class="floating-card-badge">
+          <div class="floating-badge-icon">🌿</div>
+          <div>
+            <div class="satellite-title">Hyderabad Pop-up Star</div>
+            <div class="satellite-sub">Featured at Aangan & Noor-e-Umaish</div>
+          </div>
+        </div>
+
       </div>
 
     </div>
   </section>
 
   <!-- Category & Product Catalog Section -->
-  <section class="catalog-section" id="collection" style="padding: 40px 0 80px;">
+  <section class="catalog-section" id="collection">
     <div class="container">
       
       <div class="section-header" id="categories">
@@ -132,7 +249,7 @@
         <p class="section-desc">Each piece is individually crocheted and assembled by Heena using organic yarn, soft combed threads, and delicate brass accents.</p>
       </div>
 
-      <!-- Filter Tabs -->
+      <!-- Filter Tabs (Horizontal Swipe on Mobile) -->
       <div class="category-filter-wrap" id="categoryFilters">
         <button class="filter-btn active" data-category="all">All Creations</button>
         <button class="filter-btn" data-category="earrings">Yarn Earrings</button>
@@ -143,7 +260,7 @@
         <button class="filter-btn" data-category="gifts">Gift Hampers</button>
       </div>
 
-      <!-- Product Cards Grid -->
+      <!-- Product Cards Grid (Responsive 2-column on mobile) -->
       <div class="products-grid" id="productsGrid">
         <!-- Rendered dynamically via js/app.js -->
       </div>
@@ -261,9 +378,9 @@
           </button>
         </div>
         <div style="text-align: center;">
-          <div style="background:#FFF; border-radius:18px; padding:24px; box-shadow:var(--shadow-soft); display:inline-block;">
+          <div style="background:var(--bg-cream); border-radius:18px; padding:24px; box-shadow:var(--shadow-soft); display:inline-block; border:1px solid var(--border-subtle);">
             <div style="font-size:2.5rem; margin-bottom:8px;">💌</div>
-            <div style="font-weight:700; font-size:1.05rem;">Quick WhatsApp Response</div>
+            <div style="font-weight:700; font-size:1.05rem; color:var(--text-primary);">Quick WhatsApp Response</div>
             <div style="font-size:0.84rem; color:var(--text-muted); margin-top:4px;">Direct chat with the maker</div>
           </div>
         </div>
@@ -311,7 +428,7 @@
 
         <div>
           <div class="footer-heading">Order Inquiries</div>
-          <p style="font-size:0.86rem; color:#B5AAA3; margin-bottom:12px;">
+          <p style="font-size:0.86rem; color:#AAA19B; margin-bottom:12px;">
             For orders, custom colors, or corporate gift hampers, DM us or inquire via WhatsApp:
           </p>
           <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" style="color:var(--terracotta); font-weight:600; font-size:0.9rem;">@dreammoonbyheena</a>
@@ -332,6 +449,30 @@
 
     </div>
   </footer>
+
+  <!-- App-Like Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-bar" aria-label="Mobile Navigation">
+    <a href="#hero" class="bottom-bar-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      <span>Home</span>
+    </a>
+    <a href="#collection" class="bottom-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+      <span>Shop</span>
+    </a>
+    <button class="bottom-bar-item" onclick="toggleTheme()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      <span>Theme</span>
+    </button>
+    <button class="bottom-bar-item" onclick="openOrderModal('dm-001')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+      <span>Inquire</span>
+    </button>
+    <a href="admin.html" class="bottom-bar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      <span>Staff</span>
+    </a>
+  </nav>
 
   <!-- Customer Order Inquiry Modal -->
   <div class="modal-overlay" id="inquiryModal">

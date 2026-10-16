@@ -728,9 +728,9 @@ function renderProducts() {
 
   if (filtered.length === 0) {
     productsGrid.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">
-        <p style="font-size: 1.2rem; font-family: var(--font-serif); margin-bottom: 8px;">No yarn pieces found in this category yet.</p>
-        <p style="font-size: 0.9rem;">Check back soon or request a custom bespoke commission via WhatsApp!</p>
+      <div class="empty-products-msg">
+        <p class="empty-products-title">No yarn pieces found in this category yet.</p>
+        <p class="empty-products-sub">Check back soon or request a custom bespoke commission via WhatsApp!</p>
       </div>
     `;
     return;
@@ -740,14 +740,14 @@ function renderProducts() {
     const swatchesHtml = item.yarnColors && item.yarnColors.length > 0
       ? `<div class="card-swatches">
            <span style="font-size:0.7rem; font-weight:600;">Colors:</span>
-           ${item.yarnColors.slice(0, 3).map(c => `<span style="background:var(--terracotta-light); color:var(--terracotta); padding:2px 7px; border-radius:12px; font-size:0.68rem; font-weight:600;">${c}</span>`).join('')}
+           ${item.yarnColors.slice(0, 3).map(c => `<span class="card-swatch-pill">${c}</span>`).join('')}
            ${item.yarnColors.length > 3 ? `<span style="font-size:0.68rem;">+${item.yarnColors.length - 3}</span>` : ''}
          </div>`
       : '';
 
     const badgeHtml = item.badge 
       ? `<span class="card-badge">${item.badge}</span>` 
-      : (item.inStock ? `<span class="card-badge" style="color:var(--sage);">In Stock</span>` : `<span class="card-badge" style="color:#C62828;">Made to Order</span>`);
+      : (item.inStock ? `<span class="card-badge badge-instock">In Stock</span>` : `<span class="card-badge badge-madetoorder">Made to Order</span>`);
 
     return `
       <div class="product-card" data-id="${item.id}">

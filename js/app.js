@@ -63,6 +63,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupInquiryModal();
   setupMobileDrawer();
   setupSmoothScrolling();
+  initCoverflowDeck();
+  updateStudioSummary();
 });
 
 /* ==========================================================================
@@ -130,37 +132,100 @@ window.closeMobileDrawer = function() {
 };
 
 /* ==========================================================================
-   3. Hero Interactive Yarn Colorway Switcher
+   3. Hero 3D Interactive Coverflow Carousel Deck
    ========================================================================== */
-window.changeHeroPreview = function(index, el) {
-  const preview = HERO_PREVIEWS[index];
-  if (!preview) return;
+let currentCoverflowIndex = 0;
+let coverflowTimer = null;
 
-  // Active state for dots
-  document.querySelectorAll('.hero-palette-dot').forEach(dot => dot.classList.remove('active'));
-  if (el) el.classList.add('active');
+function initCoverflowDeck() {
+  updateCoverflowCards();
+  startCoverflowAutoplay();
 
-  const mainCard = document.getElementById('heroMainCard');
-  const img = document.getElementById('heroShowcaseImg');
-  const satTitle = document.getElementById('heroSatTitle');
-  const satSub = document.getElementById('heroSatSub');
-
-  if (mainCard) {
-    mainCard.style.opacity = '0.4';
-    mainCard.style.transform = 'scale(0.97)';
+  const deck = document.getElementById('coverflowDeck');
+  if (deck) {
+    deck.addEventListener('mouseenter', stopCoverflowAutoplay);
+    deck.addEventListener('mouseleave', startCoverflowAutoplay);
+    deck.addEventListener('touchstart', stopCoverflowAutoplay, { passive: true });
+    deck.addEventListener('touchend', startCoverflowAutoplay, { passive: true });
   }
+}
 
-  setTimeout(() => {
-    if (img) img.src = preview.img;
-    if (satTitle) satTitle.innerText = preview.title;
-    if (satSub) satSub.innerText = preview.sub;
+function updateCoverflowCards() {
+  const cards = document.querySelectorAll('.coverflow-card');
+  const dots = document.querySelectorAll('.coverflow-dot');
+  const paletteDots = document.querySelectorAll('.hero-palette-dot');
+  const total = cards.length;
+  if (total === 0) return;
 
-    if (mainCard) {
-      mainCard.style.opacity = '1';
-      mainCard.style.transform = '';
+  cards.forEach((card, i) => {
+    card.classList.remove('pos-center', 'pos-left', 'pos-right', 'pos-hidden');
+    let diff = (i - currentCoverflowIndex) % total;
+    if (diff < -Math.floor(total / 2)) diff += total;
+    if (diff > Math.floor((total - 1) / 2)) diff -= total;
+
+    if (diff === 0) {
+      card.classList.add('pos-center');
+    } else if (diff === 1 || (total === 2 && diff === -1)) {
+      card.classList.add('pos-right');
+    } else if (diff === -1) {
+      card.classList.add('pos-left');
+    } else {
+      card.classList.add('pos-hidden');
     }
-  }, 180);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentCoverflowIndex);
+  });
+
+  paletteDots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentCoverflowIndex);
+  });
+}
+
+window.prevCoverflow = function() {
+  const cards = document.querySelectorAll('.coverflow-card');
+  if (cards.length === 0) return;
+  currentCoverflowIndex = (currentCoverflowIndex - 1 + cards.length) % cards.length;
+  updateCoverflowCards();
 };
+
+window.nextCoverflow = function() {
+  const cards = document.querySelectorAll('.coverflow-card');
+  if (cards.length === 0) return;
+  currentCoverflowIndex = (currentCoverflowIndex + 1) % cards.length;
+  updateCoverflowCards();
+};
+
+window.jumpCoverflow = function(idx, el) {
+  const cards = document.querySelectorAll('.coverflow-card');
+  if (cards.length === 0) return;
+  currentCoverflowIndex = idx % cards.length;
+  updateCoverflowCards();
+};
+
+window.handleCardClick = function(idx) {
+  const cards = document.querySelectorAll('.coverflow-card');
+  if (cards.length === 0) return;
+  if (currentCoverflowIndex !== idx) {
+    currentCoverflowIndex = idx;
+    updateCoverflowCards();
+  }
+};
+
+function startCoverflowAutoplay() {
+  stopCoverflowAutoplay();
+  coverflowTimer = setInterval(() => {
+    window.nextCoverflow();
+  }, 5000);
+}
+
+function stopCoverflowAutoplay() {
+  if (coverflowTimer) {
+    clearInterval(coverflowTimer);
+    coverflowTimer = null;
+  }
+}
 
 /* ==========================================================================
    4. Products & Catalog Logic
@@ -191,6 +256,25 @@ async function loadProducts() {
   }
 }
 
+window.switchCatalogLayout = function(type) {
+  const bentoGrid = document.getElementById('bentoCatalogGrid');
+  const classicGrid = document.getElementById('productsGrid');
+  const btnBento = document.getElementById('btnBentoView');
+  const btnGrid = document.getElementById('btnGridView');
+
+  if (type === 'bento') {
+    if (bentoGrid) bentoGrid.style.display = 'grid';
+    if (classicGrid) classicGrid.style.display = 'none';
+    if (btnBento) btnBento.classList.add('active');
+    if (btnGrid) btnGrid.classList.remove('active');
+  } else {
+    if (bentoGrid) bentoGrid.style.display = 'none';
+    if (classicGrid) classicGrid.style.display = 'grid';
+    if (btnBento) btnBento.classList.remove('active');
+    if (btnGrid) btnGrid.classList.add('active');
+  }
+};
+
 function setupCategoryFilters() {
   if (!categoryFilters) return;
 
@@ -201,6 +285,17 @@ function setupCategoryFilters() {
       btn.classList.add('active');
       activeCategory = btn.getAttribute('data-category');
       renderProducts();
+
+      // Filter Bento cards
+      const bentoCards = document.querySelectorAll('#bentoCatalogGrid .bento-card');
+      bentoCards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        if (activeCategory === 'all' || cat === activeCategory) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
     });
   });
 }
@@ -441,3 +536,92 @@ function setupSmoothScrolling() {
     });
   });
 }
+
+/* ==========================================================================
+   6. Interactive "Make Your Own 3-Piece Gift Box" Studio
+   ========================================================================== */
+let studioState = {
+  earring: { name: 'Sunflower Dangles', price: 349 },
+  hair: { name: 'Floral Claw Clip', price: 279 },
+  palette: 'Warm Terracotta & Mustard',
+  discount: 150
+};
+
+window.selectStudioOption = function(category, idx, name, price, el) {
+  if (category === 'earring') {
+    studioState.earring = { name, price };
+  } else if (category === 'hair') {
+    studioState.hair = { name, price };
+  }
+
+  if (el) {
+    const parentRow = el.closest('.studio-options-row');
+    if (parentRow) {
+      parentRow.querySelectorAll('.studio-option-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+  }
+
+  updateStudioSummary();
+};
+
+window.selectStudioPalette = function(paletteName, el) {
+  studioState.palette = paletteName;
+  if (el) {
+    el.parentElement.querySelectorAll('.color-chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  updateStudioSummary();
+};
+
+function updateStudioSummary() {
+  const elEarring = document.getElementById('summaryEarring');
+  const elEarringPrice = document.getElementById('summaryEarringPrice');
+  const elHair = document.getElementById('summaryHair');
+  const elHairPrice = document.getElementById('summaryHairPrice');
+  const elPalette = document.getElementById('summaryPalette');
+  const elTotal = document.getElementById('summaryTotal');
+
+  if (elEarring) elEarring.innerText = `1x ${studioState.earring.name}`;
+  if (elEarringPrice) elEarringPrice.innerText = `₹${studioState.earring.price}`;
+  if (elHair) elHair.innerText = `1x ${studioState.hair.name}`;
+  if (elHairPrice) elHairPrice.innerText = `₹${studioState.hair.price}`;
+  if (elPalette) elPalette.innerText = `Palette: ${studioState.palette}`;
+
+  const total = Math.max(0, studioState.earring.price + studioState.hair.price - studioState.discount);
+  if (elTotal) elTotal.innerText = `₹${total}`;
+}
+
+window.orderStudioBox = function() {
+  const total = Math.max(0, studioState.earring.price + studioState.hair.price - studioState.discount);
+  const storePhone = (typeof STORE_CONFIG !== 'undefined' && STORE_CONFIG.whatsappNumber) 
+    ? STORE_CONFIG.whatsappNumber.replace(/[^0-9]/g, '') 
+    : '919876543210';
+
+  const message = `🎁 *Custom 3-Piece Gift Box Order - Dream Moon by Heena*\n\n` +
+    `Hello Heena! I have built a custom gift box on your website studio:\n\n` +
+    `*Box Inclusions:*\n` +
+    `1. ${studioState.earring.name} (₹${studioState.earring.price})\n` +
+    `2. ${studioState.hair.name} (₹${studioState.hair.price})\n` +
+    `3. Yarn Theme Palette: ${studioState.palette}\n` +
+    `• Special Bundle Discount: -₹${studioState.discount}\n` +
+    `*Combo Total:* ₹${total}\n\n` +
+    `Includes floral gift packaging & handwritten card. Please confirm delivery timeline!`;
+
+  const encodedUrl = `https://api.whatsapp.com/send?phone=${storePhone}&text=${encodeURIComponent(message)}`;
+
+  saveInquiryLocally({
+    product: `Custom 3-Piece Box (${studioState.earring.name} + ${studioState.hair.name})`,
+    price: total,
+    color: studioState.palette,
+    customer: 'Gift Studio Customer',
+    phone: '',
+    city: '',
+    note: 'Interactive Studio Combo',
+    date: new Date().toISOString(),
+    source: 'Gift Studio WhatsApp'
+  });
+
+  window.open(encodedUrl, '_blank');
+  showToast("Opening WhatsApp with your bespoke gift box!");
+};

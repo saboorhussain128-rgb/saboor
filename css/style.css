@@ -148,33 +148,21 @@ button, input, select, textarea {
 }
 
 /* --------------------------------------------------------------------------
-   Animations
+   Animations (Next-Level)
    -------------------------------------------------------------------------- */
 @keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(1.5deg);
-  }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(2deg); }
 }
 
 @keyframes floatReverse {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(12px) rotate(-2deg);
-  }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(14px) rotate(-2deg); }
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 var(--terracotta-glow);
-  }
-  50% {
-    box-shadow: 0 0 24px 6px var(--terracotta-glow);
-  }
+  0%, 100% { box-shadow: 0 0 0 0 var(--terracotta-glow); }
+  50% { box-shadow: 0 0 28px 8px var(--terracotta-glow); }
 }
 
 @keyframes spinSlow {
@@ -185,7 +173,7 @@ button, input, select, textarea {
 @keyframes slideFadeUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -196,6 +184,30 @@ button, input, select, textarea {
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+/* SVG Yarn Stitch Animation */
+@keyframes stitchDash {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes needleBob {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(8px, -10px) rotate(15deg); }
+  50% { transform: translate(16px, 6px) rotate(-10deg); }
+  75% { transform: translate(8px, -6px) rotate(10deg); }
+}
+
+@keyframes livePulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px #25D366; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+@keyframes cardGlance {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 /* --------------------------------------------------------------------------
@@ -745,137 +757,234 @@ button, input, select, textarea {
   font-weight: 700;
   color: var(--terracotta);
   line-height: 1;
-}
-
-.highlight-label {
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-weight: 600;
-  margin-top: 5px;
-}
-
 /* --------------------------------------------------------------------------
-   Hero Visual Cluster (Asymmetrical & Animated)
+   Hero Visual Cluster - 3D Interactive Coverflow Deck & Animated Stitch
    -------------------------------------------------------------------------- */
-.hero-visual-cluster {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Rotating decorative thread ring */
-.hero-decorative-ring {
+.hero-stitch-layer {
   position: absolute;
-  width: 520px;
-  height: 520px;
-  border: 2px dashed rgba(195, 107, 78, 0.22);
-  border-radius: 50%;
-  animation: spinSlow 36s linear infinite;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Main animated hero card */
-.hero-main-card {
+.yarn-stitch-line {
+  stroke: var(--terracotta);
+  stroke-width: 2.5;
+  stroke-dasharray: 14 10;
+  stroke-linecap: round;
+  fill: none;
+  opacity: 0.45;
+  animation: stitchDash 22s linear infinite;
+}
+
+.live-studio-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+.live-green-radar {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #25D366;
+  position: relative;
+  display: inline-block;
+  animation: livePulse 2s infinite ease-in-out;
+}
+
+.hero-visual-cluster {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  perspective: 1400px;
+  width: 100%;
+}
+
+/* 3D Coverflow Deck */
+.coverflow-deck-wrapper {
   position: relative;
   width: 100%;
-  max-width: 410px;
+  max-width: 440px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coverflow-card {
+  position: absolute;
+  width: 340px;
+  height: 480px;
+  background: var(--surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-modal);
-  background: var(--surface);
   border: 4px solid var(--surface);
-  animation: floatSlow 7s ease-in-out infinite;
-  z-index: 1;
-  transition: transform 0.4s ease;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, filter 0.6s ease;
+  cursor: pointer;
+  user-select: none;
 }
 
-.hero-main-card img {
+.coverflow-card img {
   width: 100%;
-  height: 480px;
+  height: 350px;
   object-fit: cover;
-  transition: transform 0.6s ease;
+  transition: transform 0.5s ease;
 }
 
-.hero-main-card:hover img {
+.coverflow-card:hover img {
   transform: scale(1.05);
 }
 
-/* Floating Satellite Card 1: Top Right */
-.floating-card-satellite {
-  position: absolute;
-  top: 20px;
-  right: -24px;
+.coverflow-card-content {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
-  padding: 14px 18px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-hover);
-  border: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  animation: floatReverse 6s ease-in-out infinite;
+  position: relative;
   z-index: 2;
-  max-width: 230px;
 }
 
-.satellite-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--mustard-light);
-  color: var(--mustard);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  flex-shrink: 0;
+.coverflow-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  color: var(--terracotta);
+  margin-bottom: 4px;
 }
 
-.satellite-title {
-  font-size: 0.82rem;
+.coverflow-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 6px;
   line-height: 1.2;
 }
 
-.satellite-sub {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-/* Floating Satellite Card 2: Bottom Left */
-.floating-card-badge {
-  position: absolute;
-  bottom: 24px;
-  left: -28px;
-  background: var(--surface);
-  padding: 14px 20px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-hover);
-  border: 1px solid var(--border-subtle);
+.coverflow-footer {
   display: flex;
   align-items: center;
-  gap: 12px;
-  animation: floatSlow 8s ease-in-out infinite;
-  z-index: 2;
-  max-width: 250px;
+  justify-content: space-between;
 }
 
-.floating-badge-icon {
-  width: 40px;
-  height: 40px;
+.coverflow-price {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.coverflow-btn {
+  background: var(--terracotta-light);
+  color: var(--terracotta);
+  border: 1px solid var(--terracotta);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.coverflow-btn:hover {
+  background: var(--terracotta);
+  color: #FFF;
+}
+
+/* 3D States */
+.coverflow-card.pos-center {
+  transform: translate3d(0, 0, 0) scale(1) rotateY(0deg);
+  z-index: 5;
+  opacity: 1;
+  filter: none;
+}
+
+.coverflow-card.pos-left {
+  transform: translate3d(-100px, 15px, -140px) scale(0.84) rotateY(20deg);
+  z-index: 3;
+  opacity: 0.7;
+  filter: brightness(0.88);
+}
+
+.coverflow-card.pos-right {
+  transform: translate3d(100px, 15px, -140px) scale(0.84) rotateY(-20deg);
+  z-index: 3;
+  opacity: 0.7;
+  filter: brightness(0.88);
+}
+
+.coverflow-card.pos-hidden {
+  transform: translate3d(0, 40px, -220px) scale(0.7);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Deck Controls */
+.coverflow-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.coverflow-nav-btn {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: var(--sage-light);
-  color: var(--sage);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-soft);
+}
+
+.coverflow-nav-btn:hover {
+  background: var(--terracotta);
+  color: #FFF;
+  border-color: var(--terracotta);
+  transform: scale(1.08);
+}
+
+.coverflow-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.coverflow-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.coverflow-dot.active {
+  width: 22px;
+  border-radius: 6px;
+  background: var(--terracotta);
 }
 
 /* --------------------------------------------------------------------------
@@ -1225,66 +1334,419 @@ button, input, select, textarea {
   flex-shrink: 0;
 }
 
-/* Instagram Grid */
-.insta-showcase-section {
-  padding: 80px 0;
+/* --------------------------------------------------------------------------
+   Bento Box Editorial Catalog Layout
+   -------------------------------------------------------------------------- */
+.catalog-layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 30px;
 }
 
-.insta-feed-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-top: 36px;
-}
-
-.insta-post-card {
-  position: relative;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  aspect-ratio: 1 / 1;
+.layout-switch-group {
+  display: inline-flex;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px;
   box-shadow: var(--shadow-soft);
 }
 
-.insta-post-card img {
+.layout-toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.layout-toggle-btn.active {
+  background: var(--terracotta);
+  color: #FFF;
+  box-shadow: 0 2px 10px var(--terracotta-glow);
+}
+
+/* Bento Box Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.bento-card {
+  background: var(--surface-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-soft);
+}
+
+.bento-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-strong);
+}
+
+/* Bento Hero (2x2) */
+.bento-card.bento-hero {
+  grid-column: span 2;
+  grid-row: span 2;
+  background: linear-gradient(145deg, var(--surface-card) 0%, var(--terracotta-light) 100%);
+  border: 2px solid var(--terracotta);
+}
+
+.bento-card.bento-hero .bento-media {
+  height: 380px;
+}
+
+.bento-card.bento-hero .bento-title {
+  font-size: 1.7rem;
+}
+
+/* Bento Wide (2x1) */
+.bento-card.bento-wide {
+  grid-column: span 2;
+  flex-direction: row;
+}
+
+.bento-card.bento-wide .bento-media {
+  width: 48%;
+  height: 100%;
+}
+
+.bento-card.bento-wide .bento-body {
+  width: 52%;
+}
+
+/* Bento Tall (1x2) */
+.bento-card.bento-tall {
+  grid-row: span 2;
+}
+
+.bento-card.bento-tall .bento-media {
+  height: 360px;
+}
+
+.bento-media {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  background: var(--bg-cream);
+}
+
+.bento-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
 }
 
-.insta-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(20, 16, 14, 0.7);
+.bento-card:hover .bento-media img {
+  transform: scale(1.06);
+}
+
+.bento-body {
+  padding: 22px;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+}
+
+.bento-tag {
+  font-size: 0.74rem;
+  color: var(--terracotta);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.bento-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.bento-desc {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.bento-footer {
+  margin-top: auto;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  color: #FFF;
-  opacity: 0;
-  transition: opacity var(--transition-fast);
-  padding: 20px;
-  text-align: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border-subtle);
 }
 
-.insta-post-card:hover img {
-  transform: scale(1.08);
+.bento-price {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.insta-post-card:hover .insta-overlay {
-  opacity: 1;
+/* --------------------------------------------------------------------------
+   Interactive "Make Your Own 3-Piece Gift Box" Studio
+   -------------------------------------------------------------------------- */
+.gift-studio-section {
+  padding: 80px 0;
+  background: var(--bg-cream);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.insta-overlay svg {
+.studio-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.studio-step-box {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  border: 1px solid var(--border-subtle);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+.studio-step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.step-num-badge {
   width: 32px;
   height: 32px;
-  margin-bottom: 8px;
-  fill: #FFF;
+  border-radius: 50%;
+  background: var(--terracotta);
+  color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.86rem;
 }
 
-.insta-overlay-tag {
+.studio-step-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.studio-options-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.studio-option-card {
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--surface);
+  transition: all var(--transition-fast);
+}
+
+.studio-option-card:hover, .studio-option-card.selected {
+  border-color: var(--terracotta);
+  background: var(--terracotta-light);
+  transform: translateY(-2px);
+}
+
+.studio-option-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.studio-option-name {
   font-size: 0.82rem;
   font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.studio-option-price {
+  font-size: 0.78rem;
+  color: var(--terracotta);
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+/* Sticky Studio Live Summary Card */
+.studio-summary-sticky {
+  position: sticky;
+  top: 100px;
+  background: var(--surface);
+  border: 2px dashed var(--terracotta);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  box-shadow: var(--shadow-hover);
+}
+
+.studio-summary-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: var(--text-primary);
+}
+
+.studio-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.summary-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.summary-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 12px;
+  margin-bottom: 22px;
+}
+
+.summary-total-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.summary-total-price {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--terracotta);
+}
+
+/* --------------------------------------------------------------------------
+   Polaroid Pinboard Instagram Wall
+   -------------------------------------------------------------------------- */
+.polaroid-pinboard-section {
+  padding: 80px 0;
+  position: relative;
+}
+
+.polaroid-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-top: 40px;
+}
+
+.polaroid-card {
+  background: #FFF;
+  padding: 14px 14px 22px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .polaroid-card {
+  background: #221D1A;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+}
+
+/* Random subtle angles for organic pinboard look */
+.polaroid-card:nth-child(1) { transform: rotate(-3deg); }
+.polaroid-card:nth-child(2) { transform: rotate(2deg) translateY(-8px); }
+.polaroid-card:nth-child(3) { transform: rotate(-2deg); }
+.polaroid-card:nth-child(4) { transform: rotate(3deg) translateY(-6px); }
+
+.polaroid-card:hover {
+  transform: scale(1.06) rotate(0deg) !important;
+  z-index: 10;
+  box-shadow: 0 20px 45px rgba(195, 107, 78, 0.25);
+}
+
+/* Washi Tape Accent */
+.washi-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 22px;
+  background: rgba(226, 172, 120, 0.65);
+  border-left: 2px dashed rgba(255, 255, 255, 0.6);
+  border-right: 2px dashed rgba(255, 255, 255, 0.6);
+  z-index: 2;
+}
+
+.polaroid-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 2px;
+  margin-bottom: 14px;
+}
+
+.polaroid-caption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: #332B25;
+  text-align: center;
+  line-height: 1.3;
+}
+
+[data-theme="dark"] .polaroid-caption {
+  color: #F8F4EE;
+}
+
+.polaroid-likes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--terracotta);
+  margin-top: 8px;
 }
 
 /* Custom Order Banner */
@@ -1777,38 +2239,77 @@ button, input, select, textarea {
 
   /* Hero adjustments for mobile */
   .hero-section {
-    padding: 36px 0 50px;
+    padding: 30px 0 45px;
   }
 
   .hero-title {
-    font-size: 2.3rem;
+    font-size: 2.2rem;
   }
 
-  .hero-main-card {
+  .coverflow-deck-wrapper {
     max-width: 320px;
+    height: 400px;
   }
 
-  .hero-main-card img {
+  .coverflow-card {
+    width: 270px;
     height: 380px;
   }
 
-  .floating-card-satellite {
-    right: -10px;
-    top: -15px;
-    padding: 10px 14px;
-    max-width: 190px;
+  .coverflow-card img {
+    height: 250px;
   }
 
-  .floating-card-badge {
-    left: -10px;
-    bottom: -15px;
-    padding: 10px 14px;
-    max-width: 200px;
+  .coverflow-card.pos-left {
+    transform: translate3d(-55px, 10px, -90px) scale(0.82) rotateY(16deg);
   }
 
-  .hero-decorative-ring {
-    width: 380px;
-    height: 380px;
+  .coverflow-card.pos-right {
+    transform: translate3d(55px, 10px, -90px) scale(0.82) rotateY(-16deg);
+  }
+
+  /* Bento Grid Mobile - Fluid Responsive Stack */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .bento-card.bento-hero,
+  .bento-card.bento-wide,
+  .bento-card.bento-tall {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    flex-direction: column !important;
+  }
+
+  .bento-card.bento-wide .bento-media,
+  .bento-card.bento-wide .bento-body {
+    width: 100% !important;
+  }
+
+  .bento-card.bento-hero .bento-media {
+    height: 260px;
+  }
+
+  /* Studio Grid Mobile */
+  .studio-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .studio-options-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .studio-option-card img {
+    height: 70px;
+  }
+
+  /* Polaroid Wall Mobile */
+  .polaroid-board {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
   }
 
   /* Category pills mobile horizontal swipe */
@@ -1847,7 +2348,7 @@ button, input, select, textarea {
   }
 
   .card-desc {
-    display: none; /* clean mobile view */
+    display: none;
   }
 
   .card-footer {

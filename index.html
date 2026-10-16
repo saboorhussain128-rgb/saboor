@@ -9,6 +9,9 @@
   <!-- Favicon & Fonts -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>">
   <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Three.js Library for 3D Hero WebGL Visuals -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -52,11 +55,12 @@
 
       <!-- Desktop Navigation -->
       <nav class="main-nav" aria-label="Main Navigation">
-        <a href="#collection" class="nav-link active">Collection</a>
-        <a href="#categories" class="nav-link">Categories</a>
-        <a href="#story" class="nav-link">Our Story</a>
-        <a href="#instagram" class="nav-link">Instagram Feed</a>
-        <a href="#custom-order" class="nav-link">Custom Inquiry</a>
+        <a href="#lookbook" class="nav-link active">Lookbook Reel</a>
+        <a href="#craft-anatomy" class="nav-link">Craft Anatomy</a>
+        <a href="#gift-studio" class="nav-link">Curate Gift Box</a>
+        <a href="#collection" class="nav-link">Vault Collection</a>
+        <a href="#story" class="nav-link">Hyderabad Pop-Ups</a>
+        <a href="#instagram" class="nav-link">Instagram</a>
       </nav>
 
       <!-- Nav Actions -->
@@ -110,20 +114,23 @@
       </div>
 
       <div class="mobile-drawer-links">
-        <a href="#collection" class="mobile-drawer-link" onclick="closeMobileDrawer()">
-          <span>Collection</span> <span>→</span>
+        <a href="#lookbook" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>✦ Lookbook Reel</span> <span>→</span>
         </a>
-        <a href="#categories" class="mobile-drawer-link" onclick="closeMobileDrawer()">
-          <span>Categories</span> <span>→</span>
+        <a href="#craft-anatomy" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>🧶 Craft Anatomy</span> <span>→</span>
+        </a>
+        <a href="#gift-studio" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>🎁 Curate Gift Box</span> <span>→</span>
+        </a>
+        <a href="#collection" class="mobile-drawer-link" onclick="closeMobileDrawer()">
+          <span>✨ Vault Collection</span> <span>→</span>
         </a>
         <a href="#story" class="mobile-drawer-link" onclick="closeMobileDrawer()">
-          <span>About Heena</span> <span>→</span>
+          <span>🎪 Hyderabad Pop-Ups</span> <span>→</span>
         </a>
         <a href="#instagram" class="mobile-drawer-link" onclick="closeMobileDrawer()">
-          <span>Instagram Feed</span> <span>↗</span>
-        </a>
-        <a href="#custom-order" class="mobile-drawer-link" onclick="closeMobileDrawer()">
-          <span>Custom Orders</span> <span>→</span>
+          <span>📷 Instagram Moodboard</span> <span>↗</span>
         </a>
       </div>
 
@@ -142,20 +149,12 @@
     </div>
   </div>
 
-  <!-- Animated Hero Section with 3D Coverflow Deck & SVG Stitching -->
+  <!-- 3D Interactive Three.js Hero Section -->
   <section class="hero-section" id="hero">
     
     <!-- Ambient Blur Glows -->
     <div class="hero-ambient-blob top-right" aria-hidden="true"></div>
     <div class="hero-ambient-blob bottom-left" aria-hidden="true"></div>
-
-    <!-- Animated SVG Yarn Stitching Thread Ribbon -->
-    <div class="hero-stitch-layer" aria-hidden="true">
-      <svg width="100%" height="100%" viewBox="0 0 1440 600" preserveAspectRatio="none">
-        <path class="yarn-stitch-line" d="M -50,180 Q 250,50 500,220 T 1000,140 Q 1250,260 1500,120" />
-        <path class="yarn-stitch-line" style="animation-duration: 28s; opacity: 0.25; stroke-dasharray: 8 14;" d="M -50,420 Q 300,520 650,380 T 1200,480 Q 1350,390 1500,440" />
-      </svg>
-    </div>
 
     <div class="container hero-grid">
       
@@ -170,310 +169,218 @@
 
         <div class="hero-eyebrow">
           <span class="pulse-dot"></span>
-          <span>Slow-Crafted Fiber Jewellery & Accessories</span>
+          <span>Bespoke Handcrafted Fiber Jewellery</span>
         </div>
 
         <h1 class="hero-title">
-          Where Soft Yarn Turns Into <span class="italic-highlight">Timeless Adornments</span>
+          Where Soft Yarn Turns Into <span class="italic-highlight">Wearable Sculptures</span>
         </h1>
 
         <p class="hero-subtitle">
-          Bespoke yarn earrings, hand-crocheted floral chokers, cloud-soft scrunchies, and charm essentials made with artisanal passion in Hyderabad. Featherlight, hypoallergenic, and tailored to your favorite colorways.
+          Bespoke yarn earrings, hand-crocheted floral chokers, cloud-soft scrunchies, and charm essentials slow-crafted in Hyderabad. Hypoallergenic 18K gold hooks, combed organic cotton, and tailored to your favorite colorways.
         </p>
 
-        <!-- Interactive Yarn Colorway Previewer -->
+        <!-- Interactive 3D Colorway Morph Selector -->
         <div class="hero-colorway-bar">
-          <span class="hero-colorway-label">Switch Color Palette:</span>
+          <span class="hero-colorway-label">3D Thread Palette:</span>
           <div class="hero-colorway-chips">
-            <button class="hero-palette-dot active" style="background:#D89838;" title="Mustard Yellow" onclick="jumpCoverflow(0, this)"></button>
-            <button class="hero-palette-dot" style="background:#C36B4E;" title="Warm Terracotta" onclick="jumpCoverflow(1, this)"></button>
-            <button class="hero-palette-dot" style="background:#6E846B;" title="Olive Sage" onclick="jumpCoverflow(2, this)"></button>
-            <button class="hero-palette-dot" style="background:#D98880;" title="Blush Rose" onclick="jumpCoverflow(3, this)"></button>
-            <button class="hero-palette-dot" style="background:#EFE6DD;" title="Ivory Cream" onclick="jumpCoverflow(4, this)"></button>
+            <button class="hero-palette-dot active" style="background:#D89838;" title="Mustard Yellow" onclick="morph3DYarnColor('mustard', this)"></button>
+            <button class="hero-palette-dot" style="background:#C36B4E;" title="Warm Terracotta" onclick="morph3DYarnColor('terracotta', this)"></button>
+            <button class="hero-palette-dot" style="background:#6E846B;" title="Olive Sage" onclick="morph3DYarnColor('sage', this)"></button>
+            <button class="hero-palette-dot" style="background:#D98880;" title="Blush Rose" onclick="morph3DYarnColor('rose', this)"></button>
+            <button class="hero-palette-dot" style="background:#EFE6DD;" title="Ivory Cream" onclick="morph3DYarnColor('cream', this)"></button>
           </div>
         </div>
 
         <div class="hero-cta-group">
-          <a href="#collection" class="btn-primary">
-            <span>Explore Creations</span>
+          <a href="#lookbook" class="btn-primary">
+            <span>✦ Explore Lookbook Reel</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="#gift-studio" class="btn-secondary">
-            <span>🎁 Build 3-Piece Gift Box</span>
+            <span>🎁 Curate 3-Piece Gift Box</span>
           </a>
         </div>
 
         <div class="hero-highlights">
           <div class="highlight-item">
             <span class="highlight-num">100%</span>
-            <span class="highlight-label">Handcrafted</span>
+            <span class="highlight-label">Hand-Crocheted</span>
           </div>
           <div class="highlight-item">
-            <span class="highlight-num">170+</span>
-            <span class="highlight-label">Instagram Drops</span>
+            <span class="highlight-num">12g</span>
+            <span class="highlight-label">Featherlight</span>
           </div>
           <div class="highlight-item">
-            <span class="highlight-num">Pure</span>
-            <span class="highlight-label">Combed Cotton</span>
+            <span class="highlight-num">18K</span>
+            <span class="highlight-label">Gold Plated Wire</span>
           </div>
         </div>
       </div>
 
-      <!-- Right 3D Interactive Coverflow Carousel Deck -->
-      <div class="hero-visual-cluster">
-        
-        <div class="coverflow-deck-wrapper" id="coverflowDeck">
+      <!-- Right 3D Interactive Three.js WebGL Stage -->
+      <div class="hero-3d-wrapper">
+        <div class="hero-3d-stage" id="hero3dStage" title="Drag to rotate 3D jewel in 360°">
+          <canvas id="hero3dCanvas"></canvas>
           
-          <!-- Card 0: Sunflower Yarn Drop Earrings -->
-          <div class="coverflow-card pos-center" data-index="0" onclick="handleCardClick(0)">
-            <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=85" alt="Sunflower Yarn Drop Earrings" />
-            <div class="coverflow-card-content">
-              <span class="coverflow-tag">Exhibition Bestseller</span>
-              <div class="coverflow-title">Boho Sunflower Yarn Drops</div>
-              <div class="coverflow-footer">
-                <span class="coverflow-price">₹349</span>
-                <button class="coverflow-btn" onclick="openOrderModal('dm-001'); event.stopPropagation();">Order / Inquire</button>
-              </div>
-            </div>
+          <!-- Floating Glass Info Pills (3D Parallax Tilt) -->
+          <div class="hero-3d-badge top-right">
+            <span class="badge-dot"></span>
+            <span>100% Combed Cotton • Zero Fuzz</span>
           </div>
 
-          <!-- Card 1: Terracotta Daisy Crochet Choker -->
-          <div class="coverflow-card pos-right" data-index="1" onclick="handleCardClick(1)">
-            <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=85" alt="Terracotta Daisy Choker" />
-            <div class="coverflow-card-content">
-              <span class="coverflow-tag">Artisan Collar</span>
-              <div class="coverflow-title">Terracotta Daisy Choker</div>
-              <div class="coverflow-footer">
-                <span class="coverflow-price">₹499</span>
-                <button class="coverflow-btn" onclick="openOrderModal('dm-002'); event.stopPropagation();">Order / Inquire</button>
+          <div class="hero-3d-badge bottom-left" onclick="openOrderModal('dm-001')">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span style="font-size:1.1rem;">⭐</span>
+              <div>
+                <div style="font-weight:700; font-size:0.86rem; color:var(--text-primary);">Sunflower Dangles</div>
+                <div style="font-size:0.75rem; color:var(--terracotta); font-weight:700;">₹349 • Exhibition Drop</div>
               </div>
             </div>
+            <button class="badge-action-btn">Order</button>
           </div>
 
-          <!-- Card 2: Handcrafted Floral Yarn Claw Clip -->
-          <div class="coverflow-card pos-hidden" data-index="2" onclick="handleCardClick(2)">
-            <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=800&q=85" alt="Floral Yarn Claw Clip" />
-            <div class="coverflow-card-content">
-              <span class="coverflow-tag">New Hair Drop</span>
-              <div class="coverflow-title">Floral Blossom Claw Clip</div>
-              <div class="coverflow-footer">
-                <span class="coverflow-price">₹279</span>
-                <button class="coverflow-btn" onclick="openOrderModal('dm-004'); event.stopPropagation();">Order / Inquire</button>
-              </div>
-            </div>
+          <!-- Orbit Drag Prompt -->
+          <div class="hero-3d-orbit-hint">
+            <span>👆 Drag to inspect 3D jewel in 360°</span>
           </div>
-
-          <!-- Card 3: Pastel Satin-Yarn Scrunchie Duo -->
-          <div class="coverflow-card pos-hidden" data-index="3" onclick="handleCardClick(3)">
-            <img src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=800&q=85" alt="Pastel Satin Scrunchie Duo" />
-            <div class="coverflow-card-content">
-              <span class="coverflow-tag">Blush Rose Drop</span>
-              <div class="coverflow-title">Pastel Scalloped Scrunchie</div>
-              <div class="coverflow-footer">
-                <span class="coverflow-price">₹229</span>
-                <button class="coverflow-btn" onclick="openOrderModal('dm-003'); event.stopPropagation();">Order / Inquire</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4: Custom Initial Charm Bracelet -->
-          <div class="coverflow-card pos-left" data-index="4" onclick="handleCardClick(4)">
-            <img src="https://images.unsplash.com/photo-1611591475155-42ac62973e0c?auto=format&fit=crop&w=800&q=85" alt="Initial Charm Bracelet" />
-            <div class="coverflow-card-content">
-              <span class="coverflow-tag">Personalized</span>
-              <div class="coverflow-title">Thread Wrap Charm Bracelet</div>
-              <div class="coverflow-footer">
-                <span class="coverflow-price">₹299</span>
-                <button class="coverflow-btn" onclick="openOrderModal('dm-006'); event.stopPropagation();">Order / Inquire</button>
-              </div>
-            </div>
-          </div>
-
         </div>
-
-        <!-- Deck Controls & Pagination -->
-        <div class="coverflow-controls">
-          <button class="coverflow-nav-btn" onclick="prevCoverflow()" aria-label="Previous Creation">‹</button>
-          <div class="coverflow-dots">
-            <span class="coverflow-dot active" onclick="jumpCoverflow(0)"></span>
-            <span class="coverflow-dot" onclick="jumpCoverflow(1)"></span>
-            <span class="coverflow-dot" onclick="jumpCoverflow(2)"></span>
-            <span class="coverflow-dot" onclick="jumpCoverflow(3)"></span>
-            <span class="coverflow-dot" onclick="jumpCoverflow(4)"></span>
-          </div>
-          <button class="coverflow-nav-btn" onclick="nextCoverflow()" aria-label="Next Creation">›</button>
-        </div>
-
       </div>
 
     </div>
   </section>
 
-  <!-- Category & Product Catalog Section (With Bento Layout Toggle) -->
-  <section class="catalog-section" id="collection">
+  <!-- 1. The Haute Lookbook Reel (Editorial Split-Screen Magazine Showcase) -->
+  <section class="lookbook-section" id="lookbook">
     <div class="container">
       
-      <div class="section-header" id="categories">
-        <span class="section-eyebrow">Curated Collection</span>
-        <h2 class="section-title">Handmade Yarn & Aesthetic Essentials</h2>
-        <p class="section-desc">Each piece is individually crocheted and assembled by Heena using organic yarn, soft combed threads, and delicate brass accents.</p>
+      <div class="section-header">
+        <span class="section-eyebrow">Editorial Magazine Reel</span>
+        <h2 class="section-title">The Heena Atelier Drops</h2>
+        <p class="section-desc">Each slow-made piece is individually woven in Hyderabad using organic combed cotton threads, micro-crochet needlework, and gentle brass accents.</p>
       </div>
 
-      <!-- Layout Switcher & Filter Tabs Bar -->
-      <div class="catalog-layout-header">
-        
-        <!-- Filter Tabs (Horizontal Swipe on Mobile) -->
-        <div class="category-filter-wrap" id="categoryFilters" style="margin-bottom:0;">
-          <button class="filter-btn active" data-category="all">All Pieces</button>
-          <button class="filter-btn" data-category="earrings">Earrings</button>
-          <button class="filter-btn" data-category="necklaces">Chokers</button>
-          <button class="filter-btn" data-category="hair">Hair Bows</button>
-          <button class="filter-btn" data-category="bracelets">Charms</button>
-          <button class="filter-btn" data-category="charms">Bag Accents</button>
-          <button class="filter-btn" data-category="gifts">Gift Hampers</button>
-        </div>
-
-        <!-- View Switcher -->
-        <div class="layout-switch-group">
-          <button class="layout-toggle-btn active" id="btnBentoView" onclick="switchCatalogLayout('bento')">
-            <span>✦ Bento View</span>
-          </button>
-          <button class="layout-toggle-btn" id="btnGridView" onclick="switchCatalogLayout('grid')">
-            <span>⊞ Classic Grid</span>
-          </button>
-        </div>
-
+      <!-- Lookbook Drops Numbered Tab Navigation -->
+      <div class="lookbook-tabs-nav">
+        <button class="lookbook-tab-pill active" onclick="selectLookbookDrop(0)">
+          <span class="tab-num">01</span>
+          <span class="tab-title">Sunflower Dangles</span>
+        </button>
+        <button class="lookbook-tab-pill" onclick="selectLookbookDrop(1)">
+          <span class="tab-num">02</span>
+          <span class="tab-title">Daisy Choker</span>
+        </button>
+        <button class="lookbook-tab-pill" onclick="selectLookbookDrop(2)">
+          <span class="tab-num">03</span>
+          <span class="tab-title">Floral Claw Clip</span>
+        </button>
+        <button class="lookbook-tab-pill" onclick="selectLookbookDrop(3)">
+          <span class="tab-num">04</span>
+          <span class="tab-title">Scalloped Scrunchie</span>
+        </button>
+        <button class="lookbook-tab-pill" onclick="selectLookbookDrop(4)">
+          <span class="tab-num">05</span>
+          <span class="tab-title">Initial Charm Wrap</span>
+        </button>
+        <button class="lookbook-tab-pill" onclick="selectLookbookDrop(5)">
+          <span class="tab-num">06</span>
+          <span class="tab-title">4-Pc Hamper</span>
+        </button>
       </div>
 
-      <!-- Bento Box Editorial Showcase -->
-      <div class="bento-grid" id="bentoCatalogGrid">
-        
-        <!-- Bento 1: Large Spotlight (2x2) -->
-        <div class="bento-card bento-hero" data-category="earrings">
-          <div class="bento-media">
-            <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1000&q=85" alt="Boho Sunflower Yarn Drop Earrings" />
-            <span class="card-badge" style="top:16px; left:16px;">⭐ Bestseller</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">Featured Atelier Piece</span>
-            <h3 class="bento-title">Boho Sunflower Yarn Drop Earrings</h3>
-            <p class="bento-desc">Hand-crocheted sunflower petals made from combed organic cotton yarn with hypoallergenic gold-plated hooks. Featherlight and vibrant.</p>
-            <div style="display:flex; gap:6px; margin-bottom:14px;">
-              <span style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">Thread Colors:</span>
-              <span style="background:var(--terracotta-light); color:var(--terracotta); padding:2px 8px; border-radius:12px; font-size:0.72rem; font-weight:700;">Mustard Yellow</span>
-              <span style="background:var(--terracotta-light); color:var(--terracotta); padding:2px 8px; border-radius:12px; font-size:0.72rem; font-weight:700;">Warm Terracotta</span>
-              <span style="background:var(--terracotta-light); color:var(--terracotta); padding:2px 8px; border-radius:12px; font-size:0.72rem; font-weight:700;">Olive Sage</span>
-            </div>
-            <div class="bento-footer">
-              <span class="bento-price">₹349 <small style="font-size:0.8rem; text-decoration:line-through; color:var(--text-muted);">₹499</small></span>
-              <button class="btn-primary" style="padding:8px 18px; font-size:0.84rem;" onclick="openOrderModal('dm-001')">
-                <span>Inquire Order</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento 2: Wide Panoramic (2x1) -->
-        <div class="bento-card bento-wide" data-category="necklaces">
-          <div class="bento-media">
-            <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=85" alt="Terracotta Daisy Crochet Choker" />
-            <span class="card-badge" style="top:12px; left:12px;">Exhibition Star</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">Chokers & Collars</span>
-            <h3 class="bento-title">Terracotta Daisy Crochet Choker</h3>
-            <p class="bento-desc">Intricately woven floral choker with adjustable silk ties and tiny faux pearl centers.</p>
-            <div class="bento-footer">
-              <span class="bento-price">₹499</span>
-              <button class="card-action-btn" onclick="openOrderModal('dm-002')">Inquire</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento 3: Square (1x1) -->
-        <div class="bento-card" data-category="hair">
-          <div class="bento-media" style="height:210px;">
-            <img src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=600&q=85" alt="Aesthetic Pastel Satin Scrunchie" />
-            <span class="card-badge" style="top:12px; left:12px;">Trending</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">Hair Accessories</span>
-            <h3 class="bento-title" style="font-size:1.15rem;">Pastel Satin & Yarn Scrunchie Duo</h3>
-            <div class="bento-footer">
-              <span class="bento-price">₹229</span>
-              <button class="card-action-btn" onclick="openOrderModal('dm-003')">Inquire</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento 4: Square (1x1) -->
-        <div class="bento-card" data-category="bracelets">
-          <div class="bento-media" style="height:210px;">
-            <img src="https://images.unsplash.com/photo-1611591475155-42ac62973e0c?auto=format&fit=crop&w=600&q=85" alt="Custom Initial Charm Bracelet" />
-            <span class="card-badge" style="top:12px; left:12px;">Customizable</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">Bracelets & Charms</span>
-            <h3 class="bento-title" style="font-size:1.15rem;">Custom Initial Beaded Bracelet</h3>
-            <div class="bento-footer">
-              <span class="bento-price">₹299</span>
-              <button class="card-action-btn" onclick="openOrderModal('dm-006')">Inquire</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento 5: Tall Card (1x2) -->
-        <div class="bento-card bento-tall" data-category="hair">
-          <div class="bento-media">
-            <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=600&q=85" alt="Floral Yarn Claw Clip" />
-            <span class="card-badge" style="top:12px; left:12px;">New Drop</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">French Matte Clip</span>
-            <h3 class="bento-title">Floral Blossom Yarn Claw Clip</h3>
-            <p class="bento-desc">Matte aesthetic clip adorned with 3D crocheted cherry blossoms. Strong non-slip hold.</p>
-            <div class="bento-footer">
-              <span class="bento-price">₹279</span>
-              <button class="card-action-btn" onclick="openOrderModal('dm-004')">Inquire</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento 6: Wide Curated Hamper (2x1) -->
-        <div class="bento-card bento-wide" data-category="gifts">
-          <div class="bento-media">
-            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=85" alt="Bespoke Pop-Up Gift Box Set" />
-            <span class="card-badge" style="top:12px; left:12px;">Value Hamper</span>
-          </div>
-          <div class="bento-body">
-            <span class="bento-tag">Complete Gift Set</span>
-            <h3 class="bento-title">Bespoke Pop-Up Gift Box Set (4 Pcs)</h3>
-            <p class="bento-desc">Includes 1 Pair Earrings, 1 Floral Claw Clip, 1 Scrunchie, and 1 Charm Bracelet in a luxury box with a handwritten card.</p>
-            <div class="bento-footer">
-              <span class="bento-price">₹999 <small style="font-size:0.8rem; text-decoration:line-through; color:var(--text-muted);">₹1,499</small></span>
-              <button class="btn-primary" style="padding:8px 18px; font-size:0.84rem;" onclick="openOrderModal('dm-008')">Inquire Hamper</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Classic Grid Container (Toggled via layout switch) -->
-      <div class="products-grid" id="productsGrid" style="display:none; margin-top:20px;">
-        <!-- Rendered dynamically via js/app.js -->
+      <!-- Lookbook Active Editorial Spread (Rendered dynamically or initialized) -->
+      <div id="lookbookSpreadContainer" class="lookbook-spread-wrap">
+        <!-- Rendered via js/app.js -->
       </div>
 
     </div>
   </section>
 
-  <!-- Interactive "Make Your Own 3-Piece Gift Box" Studio Section -->
+  <!-- 2. Interactive "Craft & Anatomy" Showcase -->
+  <section class="anatomy-section" id="craft-anatomy">
+    <div class="container">
+      
+      <div class="section-header">
+        <span class="section-eyebrow">Deconstructed Craft</span>
+        <h2 class="section-title">Anatomy of Handcrafted Yarn Jewellery</h2>
+        <p class="section-desc">Click any pulsing hotspot to explore the artisanal materials, hypoallergenic fittings, and micro-crochet architecture behind each adornment.</p>
+      </div>
+
+      <div class="anatomy-grid">
+        
+        <!-- Left: Centerpiece Visual with Interactive Pulsing Hotspots -->
+        <div class="anatomy-visual-container">
+          <div class="anatomy-mat-frame">
+            <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1000&q=85" alt="Handcrafted Sunflower Drop Earring Anatomy" class="anatomy-main-img" />
+            
+            <!-- Hotspot 1: 18K Gold Plated Hook (Top) -->
+            <button class="hotspot-marker active" data-id="1" style="top:18%; left:50%;" onclick="highlightHotspot(1)" aria-label="18K Gold Hook">
+              <span class="hotspot-ping"></span>
+              <span class="hotspot-inner">1</span>
+            </button>
+
+            <!-- Hotspot 2: Combed Cotton Thread (Left) -->
+            <button class="hotspot-marker" data-id="2" style="top:52%; left:26%;" onclick="highlightHotspot(2)" aria-label="Combed Cotton Thread">
+              <span class="hotspot-ping"></span>
+              <span class="hotspot-inner">2</span>
+            </button>
+
+            <!-- Hotspot 3: 180 Knot Petal Architecture (Right) -->
+            <button class="hotspot-marker" data-id="3" style="top:62%; left:74%;" onclick="highlightHotspot(3)" aria-label="Crochet Petal Architecture">
+              <span class="hotspot-ping"></span>
+              <span class="hotspot-inner">3</span>
+            </button>
+
+            <!-- Hotspot 4: Freshwater Seed Pearl (Center) -->
+            <button class="hotspot-marker" data-id="4" style="top:58%; left:50%;" onclick="highlightHotspot(4)" aria-label="Natural Seed Pearl">
+              <span class="hotspot-ping"></span>
+              <span class="hotspot-inner">4</span>
+            </button>
+          </div>
+
+          <!-- Quick click strip for mobile -->
+          <div class="anatomy-quick-pills">
+            <button class="quick-pill active" onclick="highlightHotspot(1)">1. 18K Gold Hook</button>
+            <button class="quick-pill" onclick="highlightHotspot(2)">2. Combed Cotton</button>
+            <button class="quick-pill" onclick="highlightHotspot(3)">3. 180 Knot Petals</button>
+            <button class="quick-pill" onclick="highlightHotspot(4)">4. Seed Pearl Core</button>
+          </div>
+        </div>
+
+        <!-- Right: Active Callout Detail Card -->
+        <div class="anatomy-card-wrapper">
+          <div class="anatomy-active-card" id="anatomyActiveCard">
+            <div class="anatomy-card-icon">✨</div>
+            <span class="anatomy-card-tag">Hypoallergenic Architecture</span>
+            <h4 class="anatomy-card-title">18K Gold Plated Wire Hooks</h4>
+            <p class="anatomy-card-desc">100% nickel-free and lead-free gold plate over solid brass wire. Won't irritate sensitive ears or tarnish over time. Hand-bent into an ergonomic safety curve for all-day comfort.</p>
+          </div>
+
+          <!-- Artisan Guarantee Box -->
+          <div class="artisan-guarantee-box">
+            <div class="guarantee-icon">🌙</div>
+            <div>
+              <div style="font-weight:700; font-size:0.92rem; color:var(--text-primary); margin-bottom:4px;">Heena's Craft Promise</div>
+              <p style="font-size:0.82rem; color:var(--text-secondary); line-height:1.6; margin:0;">
+                If a thread loop ever pulls or hardware loosens, we repair your bespoke Dream Moon pieces with complimentary restitching at our Hyderabad studio.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. Velvet Tray Gift Hamper Studio -->
   <section class="gift-studio-section" id="gift-studio">
     <div class="container">
       
       <div class="section-header">
         <span class="section-eyebrow">Interactive Studio</span>
-        <h2 class="section-title">Build Your Custom 3-Piece Gift Box</h2>
-        <p class="section-desc">Mix and match your favorite earrings, hair accessory, and yarn palette. Get a discounted bundle price and order directly via WhatsApp!</p>
+        <h2 class="section-title">Curate Your 3-Piece Keepsake Box</h2>
+        <p class="section-desc">Select your favorite earrings, hair accessory, and yarn palette. Arranged in our signature velvet jewelry box with automated combo savings!</p>
       </div>
 
       <div class="studio-grid">
@@ -513,9 +420,9 @@
               <span class="studio-step-title">Select Your Hair Accessory:</span>
             </div>
             <div class="studio-options-row">
-              <div class="studio-option-card selected" onclick="selectStudioOption('hair', 0, 'Floral Claw Clip', 279, this)">
+              <div class="studio-option-card selected" onclick="selectStudioOption('hair', 0, 'Floral Blossom Claw Clip', 279, this)">
                 <img src="https://images.unsplash.com/photo-1535295972055-1c762f4483e5?w=300" alt="Claw Clip" />
-                <div class="studio-option-name">Floral Claw Clip</div>
+                <div class="studio-option-name">Floral Blossom Clip</div>
                 <div class="studio-option-price">₹279</div>
               </div>
               <div class="studio-option-card" onclick="selectStudioOption('hair', 1, 'Pastel Scrunchie Duo', 229, this)">
@@ -531,7 +438,7 @@
             </div>
           </div>
 
-          <!-- Step 3: Colorway & Card -->
+          <!-- Step 3: Colorway Palette -->
           <div class="studio-step-box">
             <div class="studio-step-header">
               <span class="step-num-badge">3</span>
@@ -547,44 +454,156 @@
 
         </div>
 
-        <!-- Right: Sticky Live Box Summary -->
-        <div class="studio-summary-sticky">
-          <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:1px; color:var(--terracotta); font-weight:700;">Keepsake Hamper</div>
-          <h3 class="studio-summary-title">Your Custom Box</h3>
+        <!-- Right: Luxury Velvet Jewelry Tray Preview -->
+        <div class="velvet-box-card">
+          <div class="velvet-box-header">
+            <span class="velvet-badge">LUXURY VELVET TRAY</span>
+            <div class="velvet-box-title">Your Curated Keepsake Box</div>
+          </div>
 
+          <!-- Velvet Tray Visual Mockup -->
+          <div class="velvet-tray">
+            <div class="velvet-item-slot" id="traySlot1">
+              <div class="slot-badge">Earring</div>
+              <div class="slot-title" id="trayEarringTitle">Sunflower Dangles</div>
+              <div class="slot-price" id="trayEarringPrice">₹349</div>
+            </div>
+            <div class="velvet-item-slot" id="traySlot2">
+              <div class="slot-badge">Hair Piece</div>
+              <div class="slot-title" id="trayHairTitle">Floral Blossom Clip</div>
+              <div class="slot-price" id="trayHairPrice">₹279</div>
+            </div>
+            <div class="velvet-item-slot full-width" id="traySlot3">
+              <div class="slot-badge">Theme Palette & Box Packaging</div>
+              <div class="slot-title" id="trayPaletteTitle">Palette: Warm Terracotta & Mustard</div>
+              <div class="slot-price" style="color:#25D366;">Free Gift Wrap</div>
+            </div>
+          </div>
+
+          <!-- Live Summary Pricing -->
           <div class="studio-summary-list">
-            <div class="summary-item-row">
-              <span id="summaryEarring">1x Sunflower Dangles</span>
-              <strong id="summaryEarringPrice">₹349</strong>
-            </div>
-            <div class="summary-item-row">
-              <span id="summaryHair">1x Floral Claw Clip</span>
-              <strong id="summaryHairPrice">₹279</strong>
-            </div>
-            <div class="summary-item-row">
-              <span id="summaryPalette">Palette: Warm Terracotta</span>
-              <span style="color:var(--sage); font-weight:600;">Custom</span>
-            </div>
             <div class="summary-item-row" style="color:var(--sage); font-weight:600;">
-              <span>Bundle Discount Savings</span>
+              <span>🎁 Combo Bundle Savings:</span>
               <span>-₹150</span>
             </div>
+            <div class="summary-total-row">
+              <span class="summary-total-label">Combo Total:</span>
+              <span class="summary-total-price" id="summaryTotal">₹478</span>
+            </div>
           </div>
 
-          <div class="summary-total-row">
-            <span class="summary-total-label">Combo Total:</span>
-            <span class="summary-total-price" id="summaryTotal">₹478</span>
-          </div>
-
-          <button class="btn-whatsapp" style="width:100%; padding:14px;" onclick="orderStudioBox()">
+          <button class="btn-whatsapp" style="width:100%; padding:14px; margin-top:14px;" onclick="orderStudioBox()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
             <span>Order Custom Box on WhatsApp</span>
           </button>
-          <p style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-top:8px;">Includes signature floral gift packaging</p>
+          <p style="font-size:0.75rem; text-align:center; color:var(--text-muted); margin-top:8px;">Includes signature floral gift packaging & handwritten card</p>
         </div>
 
       </div>
 
+    </div>
+  </section>
+
+  <!-- 4. The Atelier Vault (Full Product Catalog) -->
+  <section class="catalog-section" id="collection">
+    <div class="container">
+      
+      <div class="section-header" id="categories">
+        <span class="section-eyebrow">The Atelier Vault</span>
+        <h2 class="section-title">All Handcrafted Adornments</h2>
+        <p class="section-desc">Filtered by category or fiber design. Every piece is made to order with your choice of yarn palette.</p>
+      </div>
+
+      <!-- Category Filter Tabs Bar -->
+      <div class="category-filter-wrap" id="categoryFilters">
+        <button class="filter-btn active" data-category="all">All Pieces</button>
+        <button class="filter-btn" data-category="earrings">Earrings</button>
+        <button class="filter-btn" data-category="necklaces">Chokers</button>
+        <button class="filter-btn" data-category="hair">Hair Bows & Clips</button>
+        <button class="filter-btn" data-category="bracelets">Charms & Wraps</button>
+        <button class="filter-btn" data-category="gifts">Gift Hampers</button>
+      </div>
+
+      <!-- Full Products Grid Container -->
+      <div class="products-grid" id="productsGrid">
+        <!-- Rendered dynamically via js/app.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. Studio Pinboard & Hyderabad Exhibition Wall -->
+  <section class="polaroid-pinboard-section" id="instagram">
+    <div class="container">
+      
+      <div class="section-header">
+        <span class="section-eyebrow">Studio Pinboard</span>
+        <h2 class="section-title">Follow Along on Instagram</h2>
+        <p class="section-desc">Behind-the-scenes snapshots, exhibition pop-ups (Aangan & Noor-e-Umaish), and customer love from <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" style="color:var(--terracotta); text-decoration:underline;">@dreammoonbyheena</a></p>
+      </div>
+
+      <div class="polaroid-board">
+        
+        <!-- Polaroid 1 -->
+        <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" class="polaroid-card">
+          <div class="washi-tape"></div>
+          <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600" class="polaroid-photo" alt="Sunflowers" />
+          <div class="polaroid-caption">"Pure sunshine in thread form 🌻"</div>
+          <div class="polaroid-likes">❤️ 284 likes • DM to order</div>
+        </a>
+
+        <!-- Polaroid 2 -->
+        <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" class="polaroid-card">
+          <div class="washi-tape" style="background:rgba(180, 200, 175, 0.7);"></div>
+          <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600" class="polaroid-photo" alt="Choker" />
+          <div class="polaroid-caption">"Aangan pop-up day 1 in Hyderabad!"</div>
+          <div class="polaroid-likes">❤️ 412 likes • Sold Out Re-stock</div>
+        </a>
+
+        <!-- Polaroid 3 -->
+        <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" class="polaroid-card">
+          <div class="washi-tape" style="background:rgba(235, 170, 160, 0.7);"></div>
+          <img src="https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=600" class="polaroid-photo" alt="Scrunchie" />
+          <div class="polaroid-caption">"Cloud soft scrunchies ready to pack"</div>
+          <div class="polaroid-likes">❤️ 195 likes • Cotton Knit</div>
+        </a>
+
+        <!-- Polaroid 4 -->
+        <a href="https://www.instagram.com/dreammoonbyheena" target="_blank" rel="noopener" class="polaroid-card">
+          <div class="washi-tape" style="background:rgba(215, 195, 160, 0.7);"></div>
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600" class="polaroid-photo" alt="Gift Hamper" />
+          <div class="polaroid-caption">"Curated bridesmaid boxes on their way 💌"</div>
+          <div class="polaroid-likes">❤️ 530 likes • Custom Order</div>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 6. Custom Order / Direct Inquiry Banner -->
+  <section class="inquiry-banner-section" id="custom-order">
+    <div class="container">
+      <div class="inquiry-banner-card">
+        <div>
+          <span class="section-eyebrow">Bespoke Commissions</span>
+          <h3>Looking for a Custom Colorway or Bulk Gift Sets?</h3>
+          <p>
+            Whether matching an outfit for a wedding, preparing bridesmaid gift boxes, or requesting your favorite yarn color combinations, Heena takes custom bespoke orders with dedicated care.
+          </p>
+          <button class="btn-primary" onclick="openOrderModal('dm-008')">
+            <span>Start a Custom Order Inquiry</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <div style="text-align: center;">
+          <div style="background:var(--bg-cream); border-radius:18px; padding:24px; box-shadow:var(--shadow-soft); display:inline-block; border:1px solid var(--border-subtle);">
+            <div style="font-size:2.5rem; margin-bottom:8px;">💌</div>
+            <div style="font-weight:700; font-size:1.05rem; color:var(--text-primary);">Quick WhatsApp Response</div>
+            <div style="font-size:0.84rem; color:var(--text-muted); margin-top:4px;">Direct chat with the maker</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

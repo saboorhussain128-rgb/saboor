@@ -63,7 +63,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupInquiryModal();
   setupMobileDrawer();
   setupSmoothScrolling();
-  initCoverflowDeck();
+  init3DHeroCanvas();
+  renderLookbookDisplay();
+  highlightHotspot(1);
   updateStudioSummary();
 });
 
@@ -132,103 +134,550 @@ window.closeMobileDrawer = function() {
 };
 
 /* ==========================================================================
-   3. Hero 3D Interactive Coverflow Carousel Deck
+   3. Real 3D Interactive Three.js WebGL Hero Jewel Engine
    ========================================================================== */
-let currentCoverflowIndex = 0;
-let coverflowTimer = null;
+let threeScene, threeCamera, threeRenderer;
+let mainYarnKnot, knotWireframe, goldHoopRing, pearlsGroup, fiberParticles;
+let yarnMaterial, goldMaterial, pearlMaterial;
+let isDragging3D = false;
+let previousPointerPos = { x: 0, y: 0 };
+let targetRotation = { x: 0.2, y: 0.4 };
+let currentRotation = { x: 0.2, y: 0.4 };
+let rotationVelocity = { x: 0.002, y: 0.004 };
+let targetColorHex = 0xD89838; // Default Mustard Yellow
+let currentColorObj = null;
+let threeAnimationId = null;
 
-function initCoverflowDeck() {
-  updateCoverflowCards();
-  startCoverflowAutoplay();
+const YARN_PALETTES = {
+  mustard: 0xD89838,
+  terracotta: 0xC36B4E,
+  sage: 0x6E846B,
+  rose: 0xD98880,
+  cream: 0xEFE6DD
+};
 
-  const deck = document.getElementById('coverflowDeck');
-  if (deck) {
-    deck.addEventListener('mouseenter', stopCoverflowAutoplay);
-    deck.addEventListener('mouseleave', startCoverflowAutoplay);
-    deck.addEventListener('touchstart', stopCoverflowAutoplay, { passive: true });
-    deck.addEventListener('touchend', startCoverflowAutoplay, { passive: true });
+function init3DHeroCanvas() {
+  const container = document.getElementById('hero3dStage');
+  const canvas = document.getElementById('hero3dCanvas');
+  if (!container || !canvas || typeof THREE === 'undefined') {
+    return;
   }
+
+  const width = container.clientWidth || 460;
+  const height = container.clientHeight || 520;
+
+  // Scene
+  threeScene = new THREE.Scene();
+
+  // Camera
+  threeCamera = new THREE.PerspectiveCamera(42, width / height, 0.1, 100);
+  threeCamera.position.set(0, 0, 7.8);
+
+  // Renderer
+  threeRenderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: true,
+    powerPreference: 'high-performance'
+  });
+  threeRenderer.setSize(width, height);
+  threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  threeRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+  threeRenderer.toneMappingExposure = 1.15;
+
+  // Materials
+  currentColorObj = new THREE.Color(targetColorHex);
+  yarnMaterial = new THREE.MeshStandardMaterial({
+    color: currentColorObj,
+    roughness: 0.65,
+    metalness: 0.14
+  });
+
+  const detailMat = new THREE.MeshStandardMaterial({
+    color: 0xFFF2D1,
+    roughness: 0.9,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.2
+  });
+
+  goldMaterial = new THREE.MeshStandardMaterial({
+    color: 0xEBB852,
+    metalness: 0.92,
+    roughness: 0.16
+  });
+
+  pearlMaterial = new THREE.MeshStandardMaterial({
+    color: 0xFFFDF7,
+    roughness: 0.22,
+    metalness: 0.18
+  });
+
+  // 1. Central 3D Yarn Knot Sculpture
+  const knotGeo = new THREE.TorusKnotGeometry(1.45, 0.48, 120, 28, 2, 3);
+  mainYarnKnot = new THREE.Mesh(knotGeo, yarnMaterial);
+  threeScene.add(mainYarnKnot);
+
+  // Accent detail mesh
+  const knotDetailGeo = new THREE.TorusKnotGeometry(1.46, 0.49, 48, 16, 2, 3);
+  knotWireframe = new THREE.Mesh(knotDetailGeo, detailMat);
+  mainYarnKnot.add(knotWireframe);
+
+  // 2. 18K Gold Outer Orbit Ring
+  const goldRingGeo = new THREE.TorusGeometry(2.65, 0.045, 16, 100);
+  goldHoopRing = new THREE.Mesh(goldRingGeo, goldMaterial);
+  goldHoopRing.rotation.x = Math.PI / 3;
+  threeScene.add(goldHoopRing);
+
+  // 3. Orbiting Seed Pearl Constellation
+  pearlsGroup = new THREE.Group();
+  const pearlGeo = new THREE.SphereGeometry(0.13, 16, 16);
+  for (let i = 0; i < 9; i++) {
+    const angle = (i / 9) * Math.PI * 2;
+    const radius = 2.65;
+    const pearl = new THREE.Mesh(pearlGeo, pearlMaterial);
+    pearl.position.set(Math.cos(angle) * radius, Math.sin(angle) * radius, (Math.sin(angle * 2) * 0.4));
+    pearlsGroup.add(pearl);
+  }
+  goldHoopRing.add(pearlsGroup);
+
+  // 4. Floating Golden Fiber Particles
+  const particleCount = 80;
+  const particleGeo = new THREE.BufferGeometry();
+  const particlePositions = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount * 3; i += 3) {
+    particlePositions[i] = (Math.random() - 0.5) * 8;
+    particlePositions[i + 1] = (Math.random() - 0.5) * 8;
+    particlePositions[i + 2] = (Math.random() - 0.5) * 6;
+  }
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0xF7D070,
+    size: 0.06,
+    transparent: true,
+    opacity: 0.6
+  });
+  fiberParticles = new THREE.Points(particleGeo, particleMat);
+  threeScene.add(fiberParticles);
+
+  // Lighting
+  const ambientLight = new THREE.AmbientLight(0xFFF9F2, 1.3);
+  threeScene.add(ambientLight);
+
+  const mainLight = new THREE.DirectionalLight(0xFFF2DC, 1.7);
+  mainLight.position.set(6, 8, 6);
+  threeScene.add(mainLight);
+
+  const rimLight = new THREE.DirectionalLight(0xD97E62, 1.3);
+  rimLight.position.set(-6, -4, -4);
+  threeScene.add(rimLight);
+
+  const topSpot = new THREE.PointLight(0xFFEAA7, 1.5, 15);
+  topSpot.position.set(0, 5, 2);
+  threeScene.add(topSpot);
+
+  // Pointer event listeners for 3D Drag & Touch
+  setup3DInteraction(container);
+
+  // Render loop
+  animate3DHero();
+
+  // Resize handler
+  window.addEventListener('resize', onWindowResize3D);
 }
 
-function updateCoverflowCards() {
-  const cards = document.querySelectorAll('.coverflow-card');
-  const dots = document.querySelectorAll('.coverflow-dot');
-  const paletteDots = document.querySelectorAll('.hero-palette-dot');
-  const total = cards.length;
-  if (total === 0) return;
+function setup3DInteraction(container) {
+  let isPointerDown = false;
 
-  cards.forEach((card, i) => {
-    card.classList.remove('pos-center', 'pos-left', 'pos-right', 'pos-hidden');
-    let diff = (i - currentCoverflowIndex) % total;
-    if (diff < -Math.floor(total / 2)) diff += total;
-    if (diff > Math.floor((total - 1) / 2)) diff -= total;
+  container.addEventListener('pointerdown', (e) => {
+    isPointerDown = true;
+    previousPointerPos = { x: e.clientX, y: e.clientY };
+    container.classList.add('grabbing');
+  });
 
-    if (diff === 0) {
-      card.classList.add('pos-center');
-    } else if (diff === 1 || (total === 2 && diff === -1)) {
-      card.classList.add('pos-right');
-    } else if (diff === -1) {
-      card.classList.add('pos-left');
-    } else {
-      card.classList.add('pos-hidden');
+  window.addEventListener('pointermove', (e) => {
+    if (!isPointerDown) {
+      const rect = container.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+      const mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+      if (mouseX >= -0.5 && mouseX <= 0.5 && mouseY >= -0.5 && mouseY <= 0.5) {
+        targetRotation.y += mouseX * 0.015;
+        targetRotation.x += mouseY * 0.015;
+      }
+      return;
+    }
+
+    const deltaX = e.clientX - previousPointerPos.x;
+    const deltaY = e.clientY - previousPointerPos.y;
+    previousPointerPos = { x: e.clientX, y: e.clientY };
+
+    targetRotation.y += deltaX * 0.012;
+    targetRotation.x += deltaY * 0.012;
+    rotationVelocity = { x: deltaY * 0.001, y: deltaX * 0.001 };
+  });
+
+  window.addEventListener('pointerup', () => {
+    if (isPointerDown) {
+      isPointerDown = false;
+      container.classList.remove('grabbing');
     }
   });
 
-  dots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === currentCoverflowIndex);
-  });
-
-  paletteDots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === currentCoverflowIndex);
+  container.addEventListener('click', () => {
+    pulse3DJewel();
   });
 }
 
-window.prevCoverflow = function() {
-  const cards = document.querySelectorAll('.coverflow-card');
-  if (cards.length === 0) return;
-  currentCoverflowIndex = (currentCoverflowIndex - 1 + cards.length) % cards.length;
-  updateCoverflowCards();
-};
-
-window.nextCoverflow = function() {
-  const cards = document.querySelectorAll('.coverflow-card');
-  if (cards.length === 0) return;
-  currentCoverflowIndex = (currentCoverflowIndex + 1) % cards.length;
-  updateCoverflowCards();
-};
-
-window.jumpCoverflow = function(idx, el) {
-  const cards = document.querySelectorAll('.coverflow-card');
-  if (cards.length === 0) return;
-  currentCoverflowIndex = idx % cards.length;
-  updateCoverflowCards();
-};
-
-window.handleCardClick = function(idx) {
-  const cards = document.querySelectorAll('.coverflow-card');
-  if (cards.length === 0) return;
-  if (currentCoverflowIndex !== idx) {
-    currentCoverflowIndex = idx;
-    updateCoverflowCards();
-  }
-};
-
-function startCoverflowAutoplay() {
-  stopCoverflowAutoplay();
-  coverflowTimer = setInterval(() => {
-    window.nextCoverflow();
-  }, 5000);
+function pulse3DJewel() {
+  if (!mainYarnKnot) return;
+  let scale = 1.15;
+  mainYarnKnot.scale.set(scale, scale, scale);
+  const snapBack = () => {
+    scale += (1.0 - scale) * 0.12;
+    mainYarnKnot.scale.set(scale, scale, scale);
+    if (Math.abs(scale - 1.0) > 0.005) {
+      requestAnimationFrame(snapBack);
+    } else {
+      mainYarnKnot.scale.set(1, 1, 1);
+    }
+  };
+  requestAnimationFrame(snapBack);
 }
 
-function stopCoverflowAutoplay() {
-  if (coverflowTimer) {
-    clearInterval(coverflowTimer);
-    coverflowTimer = null;
+window.morph3DYarnColor = function(paletteKey, buttonEl) {
+  const hex = YARN_PALETTES[paletteKey];
+  if (!hex) return;
+  targetColorHex = hex;
+
+  document.querySelectorAll('.hero-palette-dot').forEach(b => b.classList.remove('active'));
+  if (buttonEl) buttonEl.classList.add('active');
+
+  pulse3DJewel();
+  showToast(`3D Yarn Swatch: ${paletteKey.charAt(0).toUpperCase() + paletteKey.slice(1)}`);
+};
+
+function animate3DHero() {
+  threeAnimationId = requestAnimationFrame(animate3DHero);
+
+  if (!threeRenderer || !threeScene || !threeCamera) return;
+
+  targetRotation.y += rotationVelocity.y;
+  targetRotation.x += rotationVelocity.x;
+  rotationVelocity.x *= 0.95;
+  rotationVelocity.y = (rotationVelocity.y - 0.004) * 0.95 + 0.004;
+
+  currentRotation.x += (targetRotation.x - currentRotation.x) * 0.08;
+  currentRotation.y += (targetRotation.y - currentRotation.y) * 0.08;
+
+  if (mainYarnKnot) {
+    mainYarnKnot.rotation.x = currentRotation.x;
+    mainYarnKnot.rotation.y = currentRotation.y;
+    mainYarnKnot.rotation.z += 0.0015;
   }
+
+  if (goldHoopRing) {
+    goldHoopRing.rotation.z += 0.004;
+    goldHoopRing.rotation.y = currentRotation.y * 0.5;
+  }
+
+  if (fiberParticles) {
+    fiberParticles.rotation.y += 0.001;
+    fiberParticles.rotation.x += 0.0005;
+  }
+
+  if (yarnMaterial && currentColorObj) {
+    const targetObj = new THREE.Color(targetColorHex);
+    currentColorObj.lerp(targetObj, 0.06);
+    yarnMaterial.color.copy(currentColorObj);
+  }
+
+  threeRenderer.render(threeScene, threeCamera);
+}
+
+function onWindowResize3D() {
+  const container = document.getElementById('hero3dStage');
+  if (!container || !threeCamera || !threeRenderer) return;
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  threeCamera.aspect = width / height;
+  threeCamera.updateProjectionMatrix();
+  threeRenderer.setSize(width, height);
 }
 
 /* ==========================================================================
-   4. Products & Catalog Logic
+   4. The Haute Lookbook Reel (Editorial Magazine Showcase)
+   ========================================================================== */
+const LOOKBOOK_ITEMS = [
+  {
+    num: "01",
+    tag: "Exhibition Hero",
+    title: "Boho Sunflower Yarn Drop Earrings",
+    sub: "Featherlight Organic Cotton Sunbursts",
+    desc: "Handcrafted petal-by-petal in Hyderabad using double-twisted combed cotton yarn. Secured with hypoallergenic 18K gold-plated french hooks. Featured at the Aangan & Noor-e-Umaish exhibition stalls.",
+    price: 349,
+    originalPrice: 499,
+    specs: {
+      craftTime: "2.5 Hours",
+      thread: "Combed Organic Cotton",
+      hardware: "18K Gold Plated",
+      weight: "12g (Featherlight)"
+    },
+    colors: ["Mustard Gold", "Warm Terracotta", "Olive Sage"],
+    img: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=900&q=85",
+    id: "dm-001"
+  },
+  {
+    num: "02",
+    tag: "Artisan Collar",
+    title: "Terracotta Daisy Crochet Choker",
+    sub: "Micro-Woven Scalloped Neckpiece",
+    desc: "Intricately hand-crocheted daisy blossoms centered with delicate seed pearls. Finished with adjustable ivory silk thread ties that adapt comfortably to any neckline.",
+    price: 499,
+    originalPrice: 699,
+    specs: {
+      craftTime: "4.0 Hours",
+      thread: "Mercerized Fiber Cotton",
+      hardware: "Natural Seed Pearls",
+      weight: "18g Soft-Touch"
+    },
+    colors: ["Warm Terracotta", "Ivory Cream", "Dusty Pink"],
+    img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=85",
+    id: "dm-002"
+  },
+  {
+    num: "03",
+    tag: "Hair Couture",
+    title: "Floral Blossom Yarn Claw Clip",
+    sub: "French Matte Finish With 3D Blooms",
+    desc: "Non-slip matte French hair clip embellished with 3-dimensional hand-crocheted sakura blossoms and tiny moss leaf accents. High tension spring designed for all hair textures.",
+    price: 279,
+    originalPrice: 380,
+    specs: {
+      craftTime: "1.5 Hours",
+      thread: "Pastel Acrylic-Cotton",
+      hardware: "Matte Non-Slip Clip",
+      weight: "24g Firm Grip"
+    },
+    colors: ["Olive Sage", "Cherry Blossom", "Lilac Cloud"],
+    img: "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?auto=format&fit=crop&w=900&q=85",
+    id: "dm-004"
+  },
+  {
+    num: "04",
+    tag: "Luxury Keepsake",
+    title: "Pastel Satin-Yarn Scrunchie Duo",
+    sub: "Scalloped Hand-Knit Silk Borders",
+    desc: "Premium mulberry satin scrunchie wrapped in delicate hand-knit scalloped yarn edges. Zero hair friction, zero breakage, and a gorgeous floral statement on your wrist.",
+    price: 229,
+    originalPrice: 320,
+    specs: {
+      craftTime: "1.0 Hour",
+      thread: "Combed Fluff Yarn + Silk",
+      hardware: "Elastic Grip Core",
+      weight: "16g Anti-Frizz"
+    },
+    colors: ["Blush Rose", "Champagne Cream", "Sky Mist"],
+    img: "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=900&q=85",
+    id: "dm-003"
+  },
+  {
+    num: "05",
+    tag: "Personalized",
+    title: "Custom Initial Charm Wrap Bracelet",
+    sub: "Beaded Thread Wrap with Gold Letter",
+    desc: "Woven macramé cotton cord threaded with gold letter charm of your choice and iridescent seed beads. Water-resistant, adjustable slide knot fits every wrist size.",
+    price: 299,
+    originalPrice: 399,
+    specs: {
+      craftTime: "1.8 Hours",
+      thread: "Waxed Cotton Thread",
+      hardware: "Brass Initial Charm",
+      weight: "8g Barely-There"
+    },
+    colors: ["Ivory Cream", "Midnight Black", "Sage Green"],
+    img: "https://images.unsplash.com/photo-1611591475155-42ac62973e0c?auto=format&fit=crop&w=900&q=85",
+    id: "dm-006"
+  },
+  {
+    num: "06",
+    tag: "Curated Set",
+    title: "Bespoke 4-Piece Pop-Up Gift Hamper",
+    sub: "Signature Keepsake Box & Wax Seal Card",
+    desc: "The complete artisanal experience: includes 1 Pair Sunflower Dangles, 1 Daisy Choker, 1 Blossom Claw Clip, and 1 Scrunchie, encased in a floral hard-box with handwritten calligraphy card.",
+    price: 999,
+    originalPrice: 1499,
+    specs: {
+      craftTime: "6.5 Hours Total",
+      thread: "Full Atelier Suite",
+      hardware: "Luxury Gift Packaging",
+      weight: "Complete Hamper"
+    },
+    colors: ["Terracotta & Gold", "Pastel Garden", "Bespoke Custom"],
+    img: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=900&q=85",
+    id: "dm-008"
+  }
+];
+
+let activeLookbookIndex = 0;
+
+window.selectLookbookDrop = function(index) {
+  activeLookbookIndex = index;
+  renderLookbookDisplay();
+};
+
+function renderLookbookDisplay() {
+  const item = LOOKBOOK_ITEMS[activeLookbookIndex];
+  if (!item) return;
+
+  document.querySelectorAll('.lookbook-tab-pill').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === activeLookbookIndex);
+  });
+
+  const displayEl = document.getElementById('lookbookSpreadContainer');
+  if (!displayEl) return;
+
+  displayEl.innerHTML = `
+    <div class="lookbook-spread">
+      <!-- Left Editorial Visual -->
+      <div class="lookbook-visual-frame">
+        <div class="lookbook-img-wrapper">
+          <img src="${item.img}" alt="${item.title}" class="lookbook-hero-img" loading="lazy" />
+          <div class="lookbook-gold-seal">
+            <svg viewBox="0 0 100 100" class="seal-svg">
+              <path id="curve" d="M 12 50 A 38 38 0 1 1 88 50 A 38 38 0 1 1 12 50" fill="none" />
+              <text><textPath href="#curve" startOffset="0%">DREAM MOON • HYDERABAD • ATELIER •</textPath></text>
+            </svg>
+            <div class="seal-center">🌙</div>
+          </div>
+          <span class="lookbook-floating-badge">${item.tag}</span>
+        </div>
+      </div>
+
+      <!-- Right Editorial Content -->
+      <div class="lookbook-editorial-card">
+        <div class="lookbook-eyebrow">
+          <span>ATELIER EDITION</span>
+          <span class="eyebrow-divider">•</span>
+          <span>DROP ${item.num} / 06</span>
+        </div>
+
+        <h3 class="lookbook-title">${item.title}</h3>
+        <div class="lookbook-subtitle">${item.sub}</div>
+        <p class="lookbook-desc">${item.desc}</p>
+
+        <!-- Craft Specifications Grid -->
+        <div class="lookbook-specs-grid">
+          <div class="spec-cell">
+            <span class="spec-label">Craft Time</span>
+            <span class="spec-val">⏱️ ${item.specs.craftTime}</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Thread Fiber</span>
+            <span class="spec-val">🧶 ${item.specs.thread}</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Fittings</span>
+            <span class="spec-val">✨ ${item.specs.hardware}</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Wearability</span>
+            <span class="spec-val">⚖️ ${item.specs.weight}</span>
+          </div>
+        </div>
+
+        <!-- Available Colorways -->
+        <div class="lookbook-colors-wrap">
+          <span class="colors-label">Signature Colorways:</span>
+          <div class="colors-list">
+            ${item.colors.map(c => `<span class="lookbook-color-tag">${c}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- Price & Action CTA -->
+        <div class="lookbook-cta-bar">
+          <div class="lookbook-price-block">
+            <span class="lookbook-price">₹${item.price}</span>
+            <span class="lookbook-orig-price">₹${item.originalPrice}</span>
+            <span class="lookbook-save-badge">Save ₹${item.originalPrice - item.price}</span>
+          </div>
+
+          <div class="lookbook-btn-row">
+            <button class="btn-primary" onclick="openOrderModal('${item.id}')">
+              <span>Order / Inquire</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <a href="https://api.whatsapp.com/send?phone=919876543210&text=Hi%20Heena!%20I%20am%20interested%20in%20ordering%20the%20${encodeURIComponent(item.title)}%20(₹${item.price})" target="_blank" rel="noopener" class="btn-whatsapp-compact" title="Instant WhatsApp">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+}
+
+/* ==========================================================================
+   5. Interactive Craft Anatomy Hotspots
+   ========================================================================== */
+const ANATOMY_HOTSPOTS = [
+  {
+    id: 1,
+    title: "18K Gold Plated Wire Hooks",
+    tag: "Hypoallergenic Architecture",
+    desc: "100% nickel-free and lead-free gold plate over solid brass. Won't irritate sensitive ears or tarnish over time. Hand-bent into an ergonomic safety curve for all-day comfort.",
+    icon: "✨"
+  },
+  {
+    id: 2,
+    title: "Double-Twisted Combed Cotton",
+    tag: "Organic Pure Fiber",
+    desc: "Long-staple organic cotton threads that undergo combing to eliminate short fuzz. Retains vibrant, warm terracotta and mustard dyes without fading.",
+    icon: "🧶"
+  },
+  {
+    id: 3,
+    title: "Scalloped Crochet Architecture",
+    tag: "180 Knot Loops",
+    desc: "Every petal is crocheted individually using a micro 1.25mm aluminum hook. 14 overlapping petal stitches create a three-dimensional blossoming effect.",
+    icon: "🌸"
+  },
+  {
+    id: 4,
+    title: "Hand-Sewn Natural Seed Pearl",
+    tag: "Freshwater Luster",
+    desc: "The flower core is adorned with a hand-selected freshwater seed pearl, anchored with reinforced invisible nylon thread to withstand daily wear.",
+    icon: "🦪"
+  }
+];
+
+window.highlightHotspot = function(id) {
+  const spot = ANATOMY_HOTSPOTS.find(h => h.id === id);
+  if (!spot) return;
+
+  document.querySelectorAll('.hotspot-marker').forEach(m => {
+    m.classList.toggle('active', parseInt(m.getAttribute('data-id')) === id);
+  });
+
+  document.querySelectorAll('.quick-pill').forEach((btn, idx) => {
+    btn.classList.toggle('active', (idx + 1) === id);
+  });
+
+  const card = document.getElementById('anatomyActiveCard');
+  if (card) {
+    card.innerHTML = `
+      <div class="anatomy-card-icon">${spot.icon}</div>
+      <span class="anatomy-card-tag">${spot.tag}</span>
+      <h4 class="anatomy-card-title">${spot.title}</h4>
+      <p class="anatomy-card-desc">${spot.desc}</p>
+    `;
+    card.style.opacity = '0.5';
+    setTimeout(() => { card.style.opacity = '1'; }, 100);
+  }
+};
+
+/* ==========================================================================
+   6. Products & Catalog Logic
    ========================================================================== */
 async function loadProducts() {
   const localData = localStorage.getItem('dreammoon_products');
@@ -256,25 +705,6 @@ async function loadProducts() {
   }
 }
 
-window.switchCatalogLayout = function(type) {
-  const bentoGrid = document.getElementById('bentoCatalogGrid');
-  const classicGrid = document.getElementById('productsGrid');
-  const btnBento = document.getElementById('btnBentoView');
-  const btnGrid = document.getElementById('btnGridView');
-
-  if (type === 'bento') {
-    if (bentoGrid) bentoGrid.style.display = 'grid';
-    if (classicGrid) classicGrid.style.display = 'none';
-    if (btnBento) btnBento.classList.add('active');
-    if (btnGrid) btnGrid.classList.remove('active');
-  } else {
-    if (bentoGrid) bentoGrid.style.display = 'none';
-    if (classicGrid) classicGrid.style.display = 'grid';
-    if (btnBento) btnBento.classList.remove('active');
-    if (btnGrid) btnGrid.classList.add('active');
-  }
-};
-
 function setupCategoryFilters() {
   if (!categoryFilters) return;
 
@@ -285,17 +715,6 @@ function setupCategoryFilters() {
       btn.classList.add('active');
       activeCategory = btn.getAttribute('data-category');
       renderProducts();
-
-      // Filter Bento cards
-      const bentoCards = document.querySelectorAll('#bentoCatalogGrid .bento-card');
-      bentoCards.forEach(card => {
-        const cat = card.getAttribute('data-category');
-        if (activeCategory === 'all' || cat === activeCategory) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
     });
   });
 }
@@ -587,6 +1006,19 @@ function updateStudioSummary() {
   if (elHair) elHair.innerText = `1x ${studioState.hair.name}`;
   if (elHairPrice) elHairPrice.innerText = `₹${studioState.hair.price}`;
   if (elPalette) elPalette.innerText = `Palette: ${studioState.palette}`;
+
+  // Velvet Tray Mockup Elements
+  const trayEarringTitle = document.getElementById('trayEarringTitle');
+  const trayEarringPrice = document.getElementById('trayEarringPrice');
+  const trayHairTitle = document.getElementById('trayHairTitle');
+  const trayHairPrice = document.getElementById('trayHairPrice');
+  const trayPaletteTitle = document.getElementById('trayPaletteTitle');
+
+  if (trayEarringTitle) trayEarringTitle.innerText = studioState.earring.name;
+  if (trayEarringPrice) trayEarringPrice.innerText = `₹${studioState.earring.price}`;
+  if (trayHairTitle) trayHairTitle.innerText = studioState.hair.name;
+  if (trayHairPrice) trayHairPrice.innerText = `₹${studioState.hair.price}`;
+  if (trayPaletteTitle) trayPaletteTitle.innerText = `Palette: ${studioState.palette}`;
 
   const total = Math.max(0, studioState.earring.price + studioState.hair.price - studioState.discount);
   if (elTotal) elTotal.innerText = `₹${total}`;
